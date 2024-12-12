@@ -12,8 +12,8 @@ public class ImagePresenter {
 
     public ImagePresenter(ImageDisplay imageDisplay, ImageLoader loader) {
         this.imageDisplay = imageDisplay;
-        imageDisplay.setPreviousButtonListener(() -> show(currentImage.previous()));
-        imageDisplay.setNextButtonListener(() -> show(currentImage.next()));
+        imageDisplay.setPreviousImageButtonListener(() -> show(currentImage.previous()));
+        imageDisplay.setNextImageButtonListener(() -> show(currentImage.next()));
         show(loader.load());
     }
 

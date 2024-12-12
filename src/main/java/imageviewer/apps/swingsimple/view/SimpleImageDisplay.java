@@ -16,8 +16,8 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
 
     private final Deserializer<byte[], java.awt.Image> deserializer = new SwingImageDeserializer();
-    private OnClickListener previousListener = OnClickListener.None;
-    private OnClickListener nextListener = OnClickListener.None;
+    private OnClickListener previousImageListener = OnClickListener.None;
+    private OnClickListener nextImageListener = OnClickListener.None;
 
     private Image currentImage; // TODO: create a mechanism to atomically access the current image
 
@@ -35,7 +35,7 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
         JButton previousImageButton = new JButton("<");
         previousImageButton.setMaximumSize(BUTTON_SIZE);
         previousImageButton.setPreferredSize(BUTTON_SIZE);
-        previousImageButton.addActionListener(_ -> previousListener.clickPerformed());
+        previousImageButton.addActionListener(_ -> previousImageListener.clickPerformed());
         return previousImageButton;
     }
 
@@ -43,7 +43,7 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
         JButton nextImageButton = new JButton(">");
         nextImageButton.setMaximumSize(BUTTON_SIZE);
         nextImageButton.setPreferredSize(BUTTON_SIZE);
-        nextImageButton.addActionListener(_ -> nextListener.clickPerformed());
+        nextImageButton.addActionListener(_ -> nextImageListener.clickPerformed());
         return nextImageButton;
     }
 
@@ -56,13 +56,13 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
     }
 
     @Override
-    public void setPreviousButtonListener(OnClickListener listener) {
-        previousListener = listener;
+    public void setPreviousImageButtonListener(OnClickListener listener) {
+        previousImageListener = listener;
     }
 
     @Override
-    public void setNextButtonListener(OnClickListener listener) {
-        nextListener = listener;
+    public void setNextImageButtonListener(OnClickListener listener) {
+        nextImageListener = listener;
     }
 
     @Override

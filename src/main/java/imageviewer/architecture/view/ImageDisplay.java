@@ -5,7 +5,7 @@ import imageviewer.architecture.model.Image;
 public interface ImageDisplay {
     void show(Image image);
 
-    void setNextButtonListener(OnClickListener listener);
+    void setNextImageButtonListener(OnClickListener listener);
 
-    void setPreviousButtonListener(OnClickListener listener);
+    void setPreviousImageButtonListener(OnClickListener listener);
 }
