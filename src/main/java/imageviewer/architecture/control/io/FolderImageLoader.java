@@ -45,7 +45,12 @@ public class FolderImageLoader implements ImageLoader {
     }
 
     private static File[] imagesUnder(File folder) throws IOException {
-        File[] files = folder.listFiles(ofSupportedImageType());
+        File[] files;
+        try {
+            files = folder.listFiles(ofSupportedImageType());
+        } catch (SecurityException e) {
+            throw new IOException(e);
+        }
         if (files == null)
             throw new IOException(
                     "Pathname does not denote a directory, or an I/O error occurred.\nPathname:" + folder.getPath()
@@ -62,7 +67,11 @@ public class FolderImageLoader implements ImageLoader {
         return new Image() {
             @Override
             public byte[] content() throws IOException {
-                return Files.readAllBytes(currentFile().toPath());
+                try {
+                    return Files.readAllBytes(currentFile().toPath());
+                } catch (SecurityException | OutOfMemoryError e) {
+                    throw new IOException(e);
+                }
             }
 
             @Override
