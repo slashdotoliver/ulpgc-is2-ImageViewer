@@ -27,13 +27,13 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
     private OnClickListener nextImageListener = OnClickListener.None;
 
     public SimpleImageDisplay() {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setBackground(Color.black);
+        setLayout(new BorderLayout());
+        setBackground(BACKGROUND_COLOR);
         setOpaque(false);
 
-        add(createPreviousButton());
-        add(Box.createGlue());
-        add(createNextButton());
+        add(createCenterPanel(), BorderLayout.CENTER);
+        add(createBottomPanel(), BorderLayout.SOUTH);
+    }
 
     private KeyListener createArrowKeysListener() {
         return new KeyListener() {
@@ -54,6 +54,35 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
         };
     }
 
+    private JLabel createNameLabel() {
+        JLabel label = new JLabel("");
+        label.setForeground(Color.white);
+        return label;
+    }
+
+    private JPanel createCenterPanel() {
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
+        centerPanel.setOpaque(false);
+
+        centerPanel.add(createPreviousButton());
+        centerPanel.add(Box.createGlue());
+        centerPanel.add(createNextButton());
+        return centerPanel;
+    }
+
+    private JPanel createBottomPanel() {
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        bottomPanel.setOpaque(false);
+        bottomPanel.add(createNamePanel());
+        return bottomPanel;
+    }
+
+    private JPanel createNamePanel() {
+        JPanel namePanel = new JPanel(new FlowLayout());
+        namePanel.setBackground(BACKGROUND_COLOR);
+        namePanel.add(nameLabel);
+        return namePanel;
     }
 
     private Component createPreviousButton() {
