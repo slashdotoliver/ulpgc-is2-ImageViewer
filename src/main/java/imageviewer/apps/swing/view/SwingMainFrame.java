@@ -1,18 +1,19 @@
-package imageviewer.apps.swingsimple.view;
+package imageviewer.apps.swing.view;
 
+import imageviewer.apps.swing.view.simple.SwingSimpleImageDisplay;
 import imageviewer.architecture.view.ErrorDisplay;
-import imageviewer.architecture.view.ImageDisplay;
+import imageviewer.architecture.view.SimpleImageDisplay;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class SimpleMainFrame extends JFrame {
+public class SwingMainFrame extends JFrame {
 
-    private ImageDisplay imageDisplay;
+    private SimpleImageDisplay imageDisplay;
     private MenuItem openItem;
 
-    public SimpleMainFrame() throws HeadlessException {
+    public SwingMainFrame() throws HeadlessException {
         setTitle("Simple Image Viewer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(150, 150));
@@ -38,7 +39,7 @@ public class SimpleMainFrame extends JFrame {
     }
 
     private Component createImageDisplay() {
-        var imageDisplay = new SimpleImageDisplay();
+        var imageDisplay = new SwingSimpleImageDisplay();
         this.imageDisplay = imageDisplay;
         return imageDisplay;
     }
@@ -47,7 +48,7 @@ public class SimpleMainFrame extends JFrame {
         return openItem;
     }
 
-    public ImageDisplay getImageDisplay() {
+    public SimpleImageDisplay getImageDisplay() {
         return imageDisplay;
     }
 

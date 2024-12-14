@@ -1,4 +1,4 @@
-package imageviewer.apps.swingsimple.control;
+package imageviewer.apps.swing.control;
 
 import java.io.File;
 

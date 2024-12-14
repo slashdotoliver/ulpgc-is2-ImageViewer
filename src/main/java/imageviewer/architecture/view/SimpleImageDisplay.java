@@ -2,7 +2,7 @@ package imageviewer.architecture.view;
 
 import imageviewer.architecture.model.Image;
 
-public interface ImageDisplay {
+public interface SimpleImageDisplay {
     void show(Image image);
 
     void setNextImageButtonListener(OnClickListener listener);

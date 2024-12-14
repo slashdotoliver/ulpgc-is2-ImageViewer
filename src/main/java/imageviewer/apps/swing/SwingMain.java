@@ -1,9 +1,9 @@
-package imageviewer.apps.swingsimple;
+package imageviewer.apps.swing;
 
-import imageviewer.apps.swingsimple.control.ProgramArguments;
-import imageviewer.apps.swingsimple.view.SimpleFolderDialog;
-import imageviewer.apps.swingsimple.view.SimpleMainFrame;
-import imageviewer.architecture.control.ImagePresenter;
+import imageviewer.apps.swing.control.ProgramArguments;
+import imageviewer.apps.swing.view.SwingFolderDialog;
+import imageviewer.apps.swing.view.SwingMainFrame;
+import imageviewer.architecture.control.presenters.SimpleImagePresenter;
 import imageviewer.architecture.control.commands.Command;
 import imageviewer.architecture.control.commands.CommandName;
 import imageviewer.architecture.control.commands.OpenImageFolderCommand;
@@ -18,18 +18,18 @@ import java.util.logging.Logger;
 
 import static imageviewer.architecture.control.io.FolderImageLoader.*;
 
-public class SimpleMain {
+public class SwingMain {
 
     private static final Map<CommandName, Command> COMMANDS = new HashMap<>();
-    private static final Logger LOGGER = Logger.getLogger(SimpleMain.class.getSimpleName());
-    private static ImagePresenter presenter;
-    private static SimpleMainFrame mainFrame;
+    private static final Logger LOGGER = Logger.getLogger(SwingMain.class.getSimpleName());
+    private static SimpleImagePresenter presenter;
+    private static SwingMainFrame mainFrame;
 
     public static void main(String[] args) {
         changeLookAndFeel();
 
-        mainFrame = new SimpleMainFrame();
-        presenter = new ImagePresenter(mainFrame.getImageDisplay());
+        mainFrame = new SwingMainFrame();
+        presenter = new SimpleImagePresenter(mainFrame.getImageDisplay());
 
         handleArguments(args);
         registerOpenFolderCommand();
@@ -47,7 +47,7 @@ public class SimpleMain {
     private static void registerOpenFolderCommand() {
         COMMANDS.put(CommandName.OpenFolderCommand, new OpenImageFolderCommand(
                 mainFrame.getErrorDisplay(),
-                new SimpleFolderDialog(),
+                new SwingFolderDialog(),
                 presenter
         ));
         mainFrame.getOpenFolderMenuItem().addActionListener(

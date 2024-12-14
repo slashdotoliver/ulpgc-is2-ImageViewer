@@ -1,7 +1,7 @@
 package imageviewer.architecture.control.commands;
 
-import imageviewer.architecture.control.ImagePresenter;
 import imageviewer.architecture.control.io.FolderImageLoader;
+import imageviewer.architecture.control.presenters.ImagePresenter;
 import imageviewer.architecture.view.ErrorDisplay;
 import imageviewer.architecture.view.FolderDialog;
 

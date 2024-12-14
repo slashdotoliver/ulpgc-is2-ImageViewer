@@ -1,4 +1,4 @@
-package imageviewer.apps.swingsimple.control.io;
+package imageviewer.apps.swing.control.io;
 
 import imageviewer.architecture.control.io.Deserializer;
 

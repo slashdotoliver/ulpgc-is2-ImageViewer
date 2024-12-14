@@ -1,10 +1,10 @@
-package imageviewer.apps.swingsimple.view;
+package imageviewer.apps.swing.view.simple;
 
-import imageviewer.apps.swingsimple.control.io.SwingImageCachedConverter;
+import imageviewer.apps.swing.control.io.SwingImageCachedConverter;
 import imageviewer.architecture.control.CachedConverter;
 import imageviewer.architecture.control.SynchronizedReference;
 import imageviewer.architecture.model.Image;
-import imageviewer.architecture.view.ImageDisplay;
+import imageviewer.architecture.view.SimpleImageDisplay;
 import imageviewer.architecture.view.OnClickListener;
 import imageviewer.architecture.view.Viewport;
 
@@ -14,7 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Optional;
 
-public class SimpleImageDisplay extends JPanel implements ImageDisplay {
+public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDisplay {
 
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
     private static final Color BACKGROUND_COLOR = Color.darkGray;
@@ -26,7 +26,7 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
     private OnClickListener previousImageListener = OnClickListener.None;
     private OnClickListener nextImageListener = OnClickListener.None;
 
-    public SimpleImageDisplay() {
+    public SwingSimpleImageDisplay() {
         setLayout(new BorderLayout());
         setBackground(BACKGROUND_COLOR);
         setOpaque(false);

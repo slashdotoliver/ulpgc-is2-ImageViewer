@@ -1,18 +1,19 @@
-package imageviewer.architecture.control;
+package imageviewer.architecture.control.presenters;
 
 import imageviewer.architecture.control.io.ImageLoader;
 import imageviewer.architecture.model.Image;
-import imageviewer.architecture.view.ImageDisplay;
+import imageviewer.architecture.view.SimpleImageDisplay;
 
-public class ImagePresenter {
+public class SimpleImagePresenter implements ImagePresenter {
 
-    private final ImageDisplay imageDisplay;
+    private final SimpleImageDisplay imageDisplay;
     private Image currentImage = Image.None;
 
-    public ImagePresenter(ImageDisplay imageDisplay) {
+    public SimpleImagePresenter(SimpleImageDisplay imageDisplay) {
         this.imageDisplay = imageDisplay;
     }
 
+    @Override
     public void loadUsing(ImageLoader loader) {
         imageDisplay.reset();
         show(loader.load());

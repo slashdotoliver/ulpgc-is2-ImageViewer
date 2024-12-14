@@ -1,4 +1,4 @@
-package imageviewer.apps.swingsimple.view;
+package imageviewer.apps.swing.view;
 
 import imageviewer.architecture.view.FolderDialog;
 
@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.io.File;
 import java.util.Optional;
 
-public class SimpleFolderDialog implements FolderDialog {
+public class SwingFolderDialog implements FolderDialog {
     @Override
     public Optional<File> get() {
         JFileChooser fileChooser = new JFileChooser();
