@@ -19,12 +19,12 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
     private static final Color BACKGROUND_COLOR = Color.darkGray;
 
-    private final Deserializer<byte[], java.awt.Image> deserializer = new SwingImageDeserializer();
     private final CachedConverter<Image, java.awt.Image> cachedConverter = new SwingImageCachedConverter();
+    private final SynchronizedReference<Image> currentImage = new SynchronizedReference<>(Image.None);
+    private final KeyListener arrowKeysListener = createArrowKeysListener();
+    private final JLabel nameLabel = createNameLabel();
     private OnClickListener previousImageListener = OnClickListener.None;
     private OnClickListener nextImageListener = OnClickListener.None;
-
-    private Image currentImage; // TODO: create a mechanism to atomically access the current image
 
     public SimpleImageDisplay() {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
