@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static imageviewer.architecture.control.io.FolderImageLoader.*;
+
 public class SimpleMain {
 
     private static final Map<CommandName, Command> COMMANDS = new HashMap<>();
@@ -56,7 +58,7 @@ public class SimpleMain {
     private static void tryShowing(File folder, ErrorDisplay errorDisplay) {
         try {
             presenter.loadUsing(new FolderImageLoader(folder));
-        } catch (IOException | FolderImageLoader.EmptyImageFolderException e) {
+        } catch (IOException | EmptyImageFolderException e) {
             errorDisplay.show(e.getMessage());
         }
     }
