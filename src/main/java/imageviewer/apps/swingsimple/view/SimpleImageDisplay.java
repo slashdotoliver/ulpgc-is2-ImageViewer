@@ -1,7 +1,8 @@
 package imageviewer.apps.swingsimple.view;
 
-import imageviewer.apps.swingsimple.control.io.SwingImageDeserializer;
-import imageviewer.architecture.control.io.Deserializer;
+import imageviewer.apps.swingsimple.control.io.SwingImageCachedConverter;
+import imageviewer.architecture.control.CachedConverter;
+import imageviewer.architecture.control.SynchronizedReference;
 import imageviewer.architecture.model.Image;
 import imageviewer.architecture.view.ImageDisplay;
 import imageviewer.architecture.view.OnClickListener;
@@ -9,13 +10,17 @@ import imageviewer.architecture.view.Viewport;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Optional;
 
 public class SimpleImageDisplay extends JPanel implements ImageDisplay {
 
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
+    private static final Color BACKGROUND_COLOR = Color.darkGray;
 
     private final Deserializer<byte[], java.awt.Image> deserializer = new SwingImageDeserializer();
+    private final CachedConverter<Image, java.awt.Image> cachedConverter = new SwingImageCachedConverter();
     private OnClickListener previousImageListener = OnClickListener.None;
     private OnClickListener nextImageListener = OnClickListener.None;
 
@@ -49,9 +54,8 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
 
     @Override
     public void show(Image image) {
-        synchronized (this) {
-            currentImage = image;
-        }
+        nameLabel.setText(image.name());
+        currentImage.setTo(image);
         repaint();
     }
 
@@ -66,16 +70,26 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
     }
 
     @Override
+    public void reset() {
+        cachedConverter.clearCache();
+        previousImageListener = OnClickListener.None;
+        nextImageListener = OnClickListener.None;
+        show(Image.None);
+    }
+
+    @Override
     public void paint(Graphics g) {
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, getWidth(), getHeight());
-        drawImage(g);
+        convertCurrentImage().ifPresent(image -> drawImage(image, g));
         super.paint(g);
     }
 
-    private void drawImage(Graphics g) {
-        java.awt.Image image = fromCurrentImage();
-        if (image == null) return;
+    private Optional<java.awt.Image> convertCurrentImage() {
+        return currentImage.map(cachedConverter::convertAndCache);
+    }
+
+    private void drawImage(java.awt.Image image, Graphics g) {
         Viewport viewport = adjustedViewportTo(image);
         g.drawImage(
                 image,
@@ -85,27 +99,6 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
                 viewport.height(),
                 null
         );
-    }
-
-    private java.awt.Image fromCurrentImage() {
-        java.awt.Image image;
-        synchronized (this) {
-            {
-                if (currentImage == null) return null;
-                try {
-                    image = swingImageFrom(currentImage);
-                } catch (IOException ignored) {
-                    return null;
-                }
-            }
-        }
-        return image;
-    }
-
-    private java.awt.Image swingImageFrom(Image image) throws IOException {
-        // TODO: add cache
-        // TODO: add interface method to ImageDisplay to clean the cache
-        return deserializer.deserialize(image.content());
     }
 
     private Viewport adjustedViewportTo(java.awt.Image image) {
