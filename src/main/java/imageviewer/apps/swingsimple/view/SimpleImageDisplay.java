@@ -34,6 +34,26 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
         add(createPreviousButton());
         add(Box.createGlue());
         add(createNextButton());
+
+    private KeyListener createArrowKeysListener() {
+        return new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) { }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT -> previousImageListener.clickPerformed();
+                    case KeyEvent.VK_RIGHT -> nextImageListener.clickPerformed();
+                    default -> { }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) { }
+        };
+    }
+
     }
 
     private Component createPreviousButton() {
@@ -41,6 +61,7 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
         previousImageButton.setMaximumSize(BUTTON_SIZE);
         previousImageButton.setPreferredSize(BUTTON_SIZE);
         previousImageButton.addActionListener(_ -> previousImageListener.clickPerformed());
+        previousImageButton.addKeyListener(arrowKeysListener);
         return previousImageButton;
     }
 
@@ -49,6 +70,7 @@ public class SimpleImageDisplay extends JPanel implements ImageDisplay {
         nextImageButton.setMaximumSize(BUTTON_SIZE);
         nextImageButton.setPreferredSize(BUTTON_SIZE);
         nextImageButton.addActionListener(_ -> nextImageListener.clickPerformed());
+        nextImageButton.addKeyListener(arrowKeysListener);
         return nextImageButton;
     }
 
