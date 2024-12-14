@@ -6,4 +6,5 @@ public interface Image {
     byte[] content() throws IOException;
     Image next();
     Image previous();
+    String name();
 }

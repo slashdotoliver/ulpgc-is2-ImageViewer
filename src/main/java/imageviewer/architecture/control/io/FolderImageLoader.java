@@ -75,6 +75,11 @@ public class FolderImageLoader implements ImageLoader {
                 return imageAt(previousIndex());
             }
 
+            @Override
+            public String name() {
+                return currentFile().getName();
+            }
+
             private int nextIndex() {
                 return (index + 1) % files.length;
             }
