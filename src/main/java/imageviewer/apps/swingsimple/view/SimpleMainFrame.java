@@ -1,5 +1,6 @@
 package imageviewer.apps.swingsimple.view;
 
+import imageviewer.architecture.view.ErrorDisplay;
 import imageviewer.architecture.view.ImageDisplay;
 
 import javax.swing.*;
@@ -48,5 +49,14 @@ public class SimpleMainFrame extends JFrame {
 
     public ImageDisplay getImageDisplay() {
         return imageDisplay;
+    }
+
+    public ErrorDisplay getErrorDisplay() {
+        return message -> JOptionPane.showMessageDialog(
+                null,
+                message,
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+        );
     }
 }
