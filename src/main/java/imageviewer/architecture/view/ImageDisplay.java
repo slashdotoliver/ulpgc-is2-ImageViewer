@@ -8,4 +8,6 @@ public interface ImageDisplay {
     void setNextImageButtonListener(OnClickListener listener);
 
     void setPreviousImageButtonListener(OnClickListener listener);
+
+    void reset();
 }
