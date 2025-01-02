@@ -13,6 +13,7 @@ import imageviewer.architecture.view.listeners.OnClickListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Optional;
@@ -40,21 +41,14 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     }
 
     private KeyListener createArrowKeysListener() {
-        return new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) { }
-
+        return new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT -> previousImageListener.clickPerformed();
                     case KeyEvent.VK_RIGHT -> nextImageListener.clickPerformed();
-                    default -> { }
                 }
             }
-
-            @Override
-            public void keyReleased(KeyEvent e) { }
         };
     }
 
