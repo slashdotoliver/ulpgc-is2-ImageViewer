@@ -1,4 +1,4 @@
-package imageviewer.architecture.control;
+package imageviewer.architecture.model;
 
 import java.util.function.Function;
 
@@ -14,7 +14,7 @@ public class SynchronizedReference<V> {
         return mapper.apply(value);
     }
 
-    public synchronized void setTo(V newValue) {
+    public synchronized void set(V newValue) {
         value = newValue;
     }
 }

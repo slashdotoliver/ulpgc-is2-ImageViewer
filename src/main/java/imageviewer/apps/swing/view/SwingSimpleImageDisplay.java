@@ -1,12 +1,13 @@
-package imageviewer.apps.swing.view.simple;
+package imageviewer.apps.swing.view;
 
 import imageviewer.apps.swing.control.io.SwingImageCachedConverter;
 import imageviewer.architecture.control.CachedConverter;
 import imageviewer.architecture.control.SynchronizedReference;
 import imageviewer.architecture.model.Image;
+import imageviewer.architecture.model.SynchronizedReference;
 import imageviewer.architecture.view.SimpleImageDisplay;
-import imageviewer.architecture.view.OnClickListener;
 import imageviewer.architecture.view.Viewport;
+import imageviewer.architecture.view.listeners.OnClickListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,7 +107,7 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     @Override
     public void show(Image image) {
         nameLabel.setText(image.name());
-        currentImage.setTo(image);
+        currentImage.set(image);
         repaint();
     }
 
