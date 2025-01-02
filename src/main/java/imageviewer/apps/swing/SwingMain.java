@@ -3,12 +3,13 @@ package imageviewer.apps.swing;
 import imageviewer.apps.swing.control.ProgramArguments;
 import imageviewer.apps.swing.view.SwingFolderDialog;
 import imageviewer.apps.swing.view.SwingMainFrame;
-import imageviewer.architecture.control.presenters.SimpleImagePresenter;
+import imageviewer.apps.swing.view.SwingSmoothImageDisplay;
 import imageviewer.architecture.control.commands.Command;
 import imageviewer.architecture.control.commands.CommandName;
 import imageviewer.architecture.control.commands.OpenImageFolderCommand;
 import imageviewer.architecture.control.io.FolderImageLoader;
 import imageviewer.architecture.control.presenters.ImagePresenter;
+import imageviewer.architecture.control.presenters.SmoothImagePresenter;
 import imageviewer.architecture.view.ErrorDisplay;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static imageviewer.architecture.control.io.FolderImageLoader.*;
+import static imageviewer.architecture.control.io.FolderImageLoader.EmptyImageFolderException;
 
 public class SwingMain {
 
@@ -29,8 +30,9 @@ public class SwingMain {
     public static void main(String[] args) {
         changeLookAndFeel();
 
-        mainFrame = new SwingMainFrame();
-        presenter = new SimpleImagePresenter(mainFrame.getImageDisplay());
+        SwingSmoothImageDisplay imageDisplay = new SwingSmoothImageDisplay();
+        mainFrame = new SwingMainFrame(imageDisplay);
+        presenter = new SmoothImagePresenter(imageDisplay);
 
         handleArguments(args);
         registerOpenFolderCommand();
@@ -67,8 +69,8 @@ public class SwingMain {
     private static void changeLookAndFeel() {
         Optional<String> look = findFirstOccurrence(
                 List.of(
-                        "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
-                        "javax.swing.plaf.nimbus.NimbusLookAndFeel"
+                        "javax.swing.plaf.nimbus.NimbusLookAndFeel",
+                        "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
                 ),
                 Arrays.stream(UIManager.getInstalledLookAndFeels())
                         .map(UIManager.LookAndFeelInfo::getClassName)
