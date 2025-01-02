@@ -1,8 +1,10 @@
 package imageviewer.apps.swing.view;
 
-import imageviewer.apps.swing.control.io.SwingImageCachedConverter;
-import imageviewer.architecture.control.CachedConverter;
-import imageviewer.architecture.control.SynchronizedReference;
+import imageviewer.apps.swing.control.SwingImageCache;
+import imageviewer.apps.swing.control.SwingImageConverter;
+import imageviewer.apps.swing.control.io.SwingImageDeserializer;
+import imageviewer.architecture.control.Cache;
+import imageviewer.architecture.control.Converter;
 import imageviewer.architecture.model.Image;
 import imageviewer.architecture.model.SynchronizedReference;
 import imageviewer.architecture.view.SimpleImageDisplay;
@@ -20,7 +22,8 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
     private static final Color BACKGROUND_COLOR = Color.darkGray;
 
-    private final CachedConverter<Image, java.awt.Image> cachedConverter = new SwingImageCachedConverter();
+    private final Cache<Image, java.awt.Image> cache = new SwingImageCache<String>().withKeyMapping(Image::name);
+    private final Converter<Image, java.awt.Image> converter = new SwingImageConverter(new SwingImageDeserializer());
     private final SynchronizedReference<Image> currentImage = new SynchronizedReference<>(Image.None);
     private final KeyListener arrowKeysListener = createArrowKeysListener();
     private final JLabel nameLabel = createNameLabel();
@@ -123,7 +126,7 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     @Override
     public void reset() {
-        cachedConverter.clearCache();
+        cache.clear();
         previousImageListener = OnClickListener.None;
         nextImageListener = OnClickListener.None;
         show(Image.None);
@@ -138,7 +141,11 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     }
 
     private Optional<java.awt.Image> convertCurrentImage() {
-        return currentImage.map(cachedConverter::convertAndCache);
+        return currentImage.map(
+                image -> cache.has(image)
+                        ? cache.get(image)
+                        : cache.put(image, converter.from(image))
+        );
     }
 
     private void drawImage(java.awt.Image image, Graphics g) {
