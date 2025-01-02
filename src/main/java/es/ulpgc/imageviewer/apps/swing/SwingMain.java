@@ -76,17 +76,16 @@ public class SwingMain {
                         .map(UIManager.LookAndFeelInfo::getClassName)
                         .toList()
         );
-        if (look.isPresent()) {
-            try {
-                UIManager.setLookAndFeel(look.get());
-            } catch (
-                    ClassNotFoundException |
-                    InstantiationException |
-                    IllegalAccessException |
-                    UnsupportedLookAndFeelException e
-            ) {
-                LOGGER.severe(e.getMessage());
-            }
+        if (look.isEmpty()) return;
+        try {
+            UIManager.setLookAndFeel(look.get());
+        } catch (
+                ClassNotFoundException |
+                InstantiationException |
+                IllegalAccessException |
+                UnsupportedLookAndFeelException e
+        ) {
+            LOGGER.severe(e.getMessage());
         }
     }
 
