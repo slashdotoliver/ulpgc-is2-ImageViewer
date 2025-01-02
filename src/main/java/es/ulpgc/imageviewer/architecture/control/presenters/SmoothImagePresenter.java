@@ -49,12 +49,12 @@ public class SmoothImagePresenter implements ImagePresenter {
 
     private OnReleaseListener onRelease() {
         return (offset, width) -> {
-            unsetDragging();
             switch (nextAction(relativeOffsetOf(offset), width)) {
                 case ShowPreviousImage -> showPreviousImage();
                 case ShowNextImage -> showNextImage();
                 case KeepCurrentImage -> imageDisplay.setGlobalOffset(0);
             }
+            unsetDragging();
         };
     }
 
