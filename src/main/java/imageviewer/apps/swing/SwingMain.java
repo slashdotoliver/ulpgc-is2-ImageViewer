@@ -8,6 +8,7 @@ import imageviewer.architecture.control.commands.Command;
 import imageviewer.architecture.control.commands.CommandName;
 import imageviewer.architecture.control.commands.OpenImageFolderCommand;
 import imageviewer.architecture.control.io.FolderImageLoader;
+import imageviewer.architecture.control.presenters.ImagePresenter;
 import imageviewer.architecture.view.ErrorDisplay;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class SwingMain {
 
     private static final Map<CommandName, Command> COMMANDS = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(SwingMain.class.getSimpleName());
-    private static SimpleImagePresenter presenter;
+    private static ImagePresenter presenter;
     private static SwingMainFrame mainFrame;
 
     public static void main(String[] args) {
@@ -57,7 +58,7 @@ public class SwingMain {
 
     private static void tryShowing(File folder, ErrorDisplay errorDisplay) {
         try {
-            presenter.loadUsing(new FolderImageLoader(folder));
+            presenter.showUsing(new FolderImageLoader(folder));
         } catch (IOException | EmptyImageFolderException e) {
             errorDisplay.show(e.getMessage());
         }

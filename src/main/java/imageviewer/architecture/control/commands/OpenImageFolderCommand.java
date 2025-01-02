@@ -34,7 +34,7 @@ public class OpenImageFolderCommand implements Command {
 
         Optional<FolderImageLoader> loader = createLoader(folder.get());
 
-        loader.ifPresent(presenter::loadUsing);
+        loader.ifPresent(presenter::showUsing);
     }
 
     private Optional<FolderImageLoader> createLoader(File folder) {

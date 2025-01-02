@@ -14,7 +14,7 @@ public class SimpleImagePresenter implements ImagePresenter {
     }
 
     @Override
-    public void loadUsing(ImageLoader loader) {
+    public void showUsing(ImageLoader loader) {
         imageDisplay.reset();
         show(loader.load());
         imageDisplay.setPreviousImageButtonListener(() -> show(currentImage.previous()));
