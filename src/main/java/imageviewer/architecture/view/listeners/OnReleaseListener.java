@@ -1,7 +1,7 @@
 package imageviewer.architecture.view.listeners;
 
 public interface OnReleaseListener {
-    OnReleaseListener None = _ -> { };
+    OnReleaseListener None = (_, _) -> { };
 
-    void offset(int value);
+    void offset(int value, int width);
 }
