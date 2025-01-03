@@ -23,8 +23,8 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
     private static final Color BACKGROUND_COLOR = Color.darkGray;
 
-    private final Cache<Image, java.awt.Image> cache = new SwingImageCache<String>().withKeyMapping(Image::name);
-    private final Converter<Image, java.awt.Image> converter = new SwingImageConverter(new SwingImageDeserializer());
+    private final Cache<Image, java.awt.Image> imageCache = new SwingImageCache<String>().withKeyMapping(Image::name);
+    private final Converter<Image, java.awt.Image> imageConverter = new SwingImageConverter(new SwingImageDeserializer());
     private final SynchronizedReference<Image> currentImage = new SynchronizedReference<>(Image.None);
     private final KeyListener arrowKeysListener = createArrowKeysListener();
     private final JLabel nameLabel = createNameLabel();
@@ -120,7 +120,7 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     @Override
     public void reset() {
-        cache.clear();
+        imageCache.clear();
         previousImageListener = OnClickListener.None;
         nextImageListener = OnClickListener.None;
         show(Image.None);
@@ -136,9 +136,9 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     private Optional<java.awt.Image> convertCurrentImage() {
         return currentImage.map(
-                image -> cache.has(image)
-                        ? cache.get(image)
-                        : cache.put(image, converter.from(image))
+                image -> imageCache.has(image)
+                        ? imageCache.get(image)
+                        : imageCache.put(image, imageConverter.from(image))
         );
     }
 

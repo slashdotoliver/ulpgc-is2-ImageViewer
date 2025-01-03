@@ -22,6 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDisplay {
 
+    private enum ImageDisplayContext {
+        Current, Previous, Next
+    }
+
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
     private static final Color BACKGROUND_COLOR = Color.darkGray;
 
@@ -184,10 +188,6 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
         return imageCache.has(image)
                 ? imageCache.get(image)
                 : imageCache.put(image, imageConverter.from(image));
-    }
-
-    private enum ImageDisplayContext {
-        Current, Previous, Next
     }
 
     private void drawImages(Map<ImageDisplayContext, Optional<java.awt.Image>> images, Graphics g) {
