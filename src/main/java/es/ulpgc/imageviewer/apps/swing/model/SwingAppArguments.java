@@ -1,8 +1,8 @@
-package es.ulpgc.imageviewer.apps.swing.control;
+package es.ulpgc.imageviewer.apps.swing.model;
 
 import java.io.File;
 
-public record ProgramArguments(String[] args) {
+public record SwingAppArguments(String[] args) {
 
     public String validFormat() {
         return "Usage: <image-viewer> [initial directory]";

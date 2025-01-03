@@ -1,6 +1,6 @@
 package es.ulpgc.imageviewer.apps.swing;
 
-import es.ulpgc.imageviewer.apps.swing.control.ProgramArguments;
+import es.ulpgc.imageviewer.apps.swing.model.SwingAppArguments;
 import es.ulpgc.imageviewer.apps.swing.view.SwingFolderDialog;
 import es.ulpgc.imageviewer.apps.swing.view.SwingMainFrame;
 import es.ulpgc.imageviewer.apps.swing.view.SwingSmoothImageDisplay;
@@ -40,7 +40,7 @@ public class SwingMain {
     }
 
     private static void handleArguments(String[] args) {
-        ProgramArguments arguments = new ProgramArguments(args);
+        SwingAppArguments arguments = new SwingAppArguments(args);
         if (!arguments.valid())
             System.err.println(arguments.validFormat());
         else if (arguments.hasFolder())
