@@ -62,15 +62,15 @@ public class SmoothImagePresenter implements ImagePresenter {
         return offset - initialOffset;
     }
 
-    private boolean shouldShowPrevious(int relativeOffset, int width) {
+    private static boolean shouldShowPrevious(int relativeOffset, int width) {
         return relativeOffset > width / 4;
     }
 
-    private boolean shouldShowNext(int relativeOffset, int width) {
+    private static boolean shouldShowNext(int relativeOffset, int width) {
         return relativeOffset < -width / 4;
     }
 
-    private OnReleaseAction nextAction(int relativeOffset, int width) {
+    private static OnReleaseAction nextAction(int relativeOffset, int width) {
         if (shouldShowPrevious(relativeOffset, width)) return OnReleaseAction.ShowPreviousImage;
         if (shouldShowNext(relativeOffset, width)) return OnReleaseAction.ShowNextImage;
         return OnReleaseAction.KeepCurrentImage;
