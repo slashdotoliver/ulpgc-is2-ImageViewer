@@ -10,8 +10,8 @@ public class SwingMainFrame extends JFrame {
 
     private MenuItem openItem;
 
-    public SwingMainFrame(JPanel imageDisplayPanel) throws HeadlessException {
-        setTitle("Smooth Image Viewer");
+    public SwingMainFrame(JPanel imageDisplayPanel, String frameTitle) throws HeadlessException {
+        setTitle(frameTitle);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(150, 150));
         setSize(800, 800);

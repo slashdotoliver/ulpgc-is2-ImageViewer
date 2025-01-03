@@ -31,7 +31,7 @@ public class SwingMain {
         changeLookAndFeel();
 
         SwingSmoothImageDisplay imageDisplay = new SwingSmoothImageDisplay();
-        mainFrame = new SwingMainFrame(imageDisplay);
+        mainFrame = new SwingMainFrame(imageDisplay, "Smooth Image Viewer");
         presenter = new SmoothImagePresenter(imageDisplay);
 
         handleArguments(args);
