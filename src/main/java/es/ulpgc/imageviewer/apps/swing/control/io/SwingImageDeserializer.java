@@ -9,6 +9,10 @@ import java.io.IOException;
 public class SwingImageDeserializer implements Deserializer<byte[], java.awt.Image> {
     @Override
     public java.awt.Image deserialize(byte[] imageBytes) throws IOException {
-        return ImageIO.read(new ByteArrayInputStream(imageBytes));
+        try {
+            return ImageIO.read(new ByteArrayInputStream(imageBytes));
+        } catch (NullPointerException e) {
+            throw new IOException(e);
+        }
     }
 }
