@@ -1,6 +1,6 @@
 package es.ulpgc.imageviewer.architecture.control.commands;
 
-import es.ulpgc.imageviewer.architecture.control.io.FolderImageLoader;
+import es.ulpgc.imageviewer.architecture.io.FolderImageLoader;
 import es.ulpgc.imageviewer.architecture.control.presenters.ImagePresenter;
 import es.ulpgc.imageviewer.architecture.view.ErrorDisplay;
 import es.ulpgc.imageviewer.architecture.view.FolderDialog;
@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-import static es.ulpgc.imageviewer.architecture.control.io.FolderImageLoader.EmptyImageFolderException;
+import static es.ulpgc.imageviewer.architecture.io.FolderImageLoader.EmptyImageFolderException;
 
 public class OpenImageFolderCommand implements Command {
 

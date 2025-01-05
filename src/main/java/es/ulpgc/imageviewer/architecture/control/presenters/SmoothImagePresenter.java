@@ -1,6 +1,6 @@
 package es.ulpgc.imageviewer.architecture.control.presenters;
 
-import es.ulpgc.imageviewer.architecture.control.io.ImageLoader;
+import es.ulpgc.imageviewer.architecture.io.ImageLoader;
 import es.ulpgc.imageviewer.architecture.model.Image;
 import es.ulpgc.imageviewer.architecture.view.SmoothImageDisplay;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnDraggingListener;

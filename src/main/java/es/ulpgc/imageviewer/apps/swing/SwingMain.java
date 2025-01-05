@@ -7,7 +7,7 @@ import es.ulpgc.imageviewer.apps.swing.view.SwingSmoothImageDisplay;
 import es.ulpgc.imageviewer.architecture.control.commands.Command;
 import es.ulpgc.imageviewer.architecture.control.commands.CommandName;
 import es.ulpgc.imageviewer.architecture.control.commands.OpenImageFolderCommand;
-import es.ulpgc.imageviewer.architecture.control.io.FolderImageLoader;
+import es.ulpgc.imageviewer.architecture.io.FolderImageLoader;
 import es.ulpgc.imageviewer.architecture.control.presenters.ImagePresenter;
 import es.ulpgc.imageviewer.architecture.control.presenters.SmoothImagePresenter;
 import es.ulpgc.imageviewer.architecture.view.ErrorDisplay;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static es.ulpgc.imageviewer.architecture.control.io.FolderImageLoader.EmptyImageFolderException;
+import static es.ulpgc.imageviewer.architecture.io.FolderImageLoader.EmptyImageFolderException;
 
 public class SwingMain {
 

@@ -1,4 +1,4 @@
-package es.ulpgc.imageviewer.architecture.control.io;
+package es.ulpgc.imageviewer.architecture.io;
 
 import es.ulpgc.imageviewer.architecture.model.Image;
 

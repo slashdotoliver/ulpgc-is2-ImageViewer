@@ -1,7 +1,7 @@
 package es.ulpgc.imageviewer.apps.swing.control;
 
 import es.ulpgc.imageviewer.architecture.control.Converter;
-import es.ulpgc.imageviewer.architecture.control.io.Deserializer;
+import es.ulpgc.imageviewer.architecture.io.Deserializer;
 import es.ulpgc.imageviewer.architecture.model.Image;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package es.ulpgc.imageviewer.apps.swing.control.io;
 
-import es.ulpgc.imageviewer.architecture.control.io.Deserializer;
+import es.ulpgc.imageviewer.architecture.io.Deserializer;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
