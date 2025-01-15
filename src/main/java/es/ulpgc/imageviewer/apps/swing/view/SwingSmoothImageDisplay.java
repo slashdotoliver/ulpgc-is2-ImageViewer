@@ -1,13 +1,13 @@
 package es.ulpgc.imageviewer.apps.swing.view;
 
-import es.ulpgc.imageviewer.apps.swing.control.SwingImageConverter;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageCache;
 import es.ulpgc.imageviewer.apps.swing.control.io.SwingImageDeserializer;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageDrawer;
+import es.ulpgc.imageviewer.apps.swing.utils.JPanelBuilder;
 import es.ulpgc.imageviewer.architecture.control.Cache;
 import es.ulpgc.imageviewer.architecture.control.Converter;
-import es.ulpgc.imageviewer.architecture.model.SynchronizedReference;
 import es.ulpgc.imageviewer.architecture.model.Image;
+import es.ulpgc.imageviewer.architecture.model.SynchronizedReference;
 import es.ulpgc.imageviewer.architecture.view.SmoothImageDisplay;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnClickListener;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnDraggingListener;
@@ -16,15 +16,10 @@ import es.ulpgc.imageviewer.architecture.view.listeners.OnReleaseListener;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDisplay {
-
-    private enum ImageDisplayContext {
-        Current, Previous, Next
-    }
 
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
     private static final Color BACKGROUND_COLOR = Color.darkGray;
@@ -81,28 +76,22 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
     }
 
     private JPanel createCenterPanel() {
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
-        centerPanel.setOpaque(false);
-
-        centerPanel.add(createPreviousButton());
-        centerPanel.add(Box.createGlue());
-        centerPanel.add(createNextButton());
-        return centerPanel;
+        return JPanelBuilder.withBoxLayout(BoxLayout.X_AXIS)
+                .setOpaque(false)
+                .add(createPreviousButton())
+                .add(Box.createGlue())
+                .add(createNextButton())
+                .build();
     }
 
     private JPanel createBottomPanel() {
-        JPanel bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.setOpaque(false);
-        bottomPanel.add(createImageNamePanel());
-        return bottomPanel;
-    }
-
-    private JPanel createImageNamePanel() {
-        JPanel namePanel = new JPanel(new FlowLayout());
-        namePanel.setBackground(BACKGROUND_COLOR);
-        namePanel.add(nameLabel);
-        return namePanel;
+        return JPanelBuilder.withFlowLayout()
+                .setOpaque(false)
+                .add(JPanelBuilder.withFlowLayout()
+                        .setBackground(BACKGROUND_COLOR)
+                        .add(nameLabel)
+                        .build())
+                .build();
     }
 
     private Component createPreviousButton() {

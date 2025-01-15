@@ -4,6 +4,7 @@ import es.ulpgc.imageviewer.apps.swing.control.SwingImageCache;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageConverter;
 import es.ulpgc.imageviewer.apps.swing.control.io.SwingImageDeserializer;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageDrawer;
+import es.ulpgc.imageviewer.apps.swing.utils.JPanelBuilder;
 import es.ulpgc.imageviewer.architecture.control.Cache;
 import es.ulpgc.imageviewer.architecture.control.Converter;
 import es.ulpgc.imageviewer.architecture.model.Image;
@@ -59,28 +60,22 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     }
 
     private JPanel createCenterPanel() {
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
-        centerPanel.setOpaque(false);
-
-        centerPanel.add(createPreviousButton());
-        centerPanel.add(Box.createGlue());
-        centerPanel.add(createNextButton());
-        return centerPanel;
+        return JPanelBuilder.withBoxLayout(BoxLayout.X_AXIS)
+                .setOpaque(false)
+                .add(createPreviousButton())
+                .add(Box.createGlue())
+                .add(createNextButton())
+                .build();
     }
 
     private JPanel createBottomPanel() {
-        JPanel bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.setOpaque(false);
-        bottomPanel.add(createNamePanel());
-        return bottomPanel;
-    }
-
-    private JPanel createNamePanel() {
-        JPanel namePanel = new JPanel(new FlowLayout());
-        namePanel.setBackground(BACKGROUND_COLOR);
-        namePanel.add(nameLabel);
-        return namePanel;
+        return JPanelBuilder.withFlowLayout()
+                .setOpaque(false)
+                .add(JPanelBuilder.withFlowLayout()
+                        .setBackground(BACKGROUND_COLOR)
+                        .add(nameLabel)
+                        .build())
+                .build();
     }
 
     private Component createPreviousButton() {
