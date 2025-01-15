@@ -3,12 +3,12 @@ package es.ulpgc.imageviewer.apps.swing.view;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageCache;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageConverter;
 import es.ulpgc.imageviewer.apps.swing.control.io.SwingImageDeserializer;
+import es.ulpgc.imageviewer.apps.swing.control.SwingImageDrawer;
 import es.ulpgc.imageviewer.architecture.control.Cache;
 import es.ulpgc.imageviewer.architecture.control.Converter;
 import es.ulpgc.imageviewer.architecture.model.Image;
 import es.ulpgc.imageviewer.architecture.model.SynchronizedReference;
 import es.ulpgc.imageviewer.architecture.view.SimpleImageDisplay;
-import es.ulpgc.imageviewer.architecture.view.Viewport;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnClickListener;
 
 import javax.swing.*;
@@ -139,26 +139,9 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     }
 
     private void drawImage(java.awt.Image image, Graphics g) {
-        Viewport viewport = adjustedViewportTo(image);
-        g.drawImage(
-                image,
-                viewport.x(),
-                viewport.y(),
-                viewport.width(),
-                viewport.height(),
-                null
-        );
+        SwingImageDrawer.drawImage(image, g, 0, getSize());
     }
 
-    private Viewport adjustedViewportTo(java.awt.Image image) {
-        return Viewport.from(
-                        this.getWidth(),
-                        this.getHeight()
-                )
-                .adjustedViewportFrom(
-                        image.getWidth(null),
-                        image.getHeight(null)
-                );
     private Optional<java.awt.Image> convert(Image image) {
         return imageCache.has(image)
                 ? imageCache.get(image)

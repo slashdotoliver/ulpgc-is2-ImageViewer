@@ -3,12 +3,12 @@ package es.ulpgc.imageviewer.apps.swing.view;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageConverter;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageCache;
 import es.ulpgc.imageviewer.apps.swing.control.io.SwingImageDeserializer;
+import es.ulpgc.imageviewer.apps.swing.control.SwingImageDrawer;
 import es.ulpgc.imageviewer.architecture.control.Cache;
 import es.ulpgc.imageviewer.architecture.control.Converter;
 import es.ulpgc.imageviewer.architecture.model.SynchronizedReference;
 import es.ulpgc.imageviewer.architecture.model.Image;
 import es.ulpgc.imageviewer.architecture.view.SmoothImageDisplay;
-import es.ulpgc.imageviewer.architecture.view.Viewport;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnClickListener;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnDraggingListener;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnReleaseListener;
@@ -183,37 +183,16 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
         });
     }
 
+    private void drawImage(java.awt.Image image, Graphics g, int localOffset) {
+        SwingImageDrawer.drawImage(image, g, localOffset + globalOffset.get(), getSize());
+    }
+
     private Optional<java.awt.Image> convert(Image image) {
         return imageCache.has(image)
                 ? imageCache.get(image)
-    private void drawImages(Map<ImageDisplayContext, Optional<java.awt.Image>> images, Graphics g) {
-        images.get(ImageDisplayContext.Previous).ifPresent(image -> drawImage(image, g, -getWidth()));
-        images.get(ImageDisplayContext.Current).ifPresent(image -> drawImage(image, g, 0));
-        images.get(ImageDisplayContext.Next).ifPresent(image -> drawImage(image, g, +getWidth()));
                 : tryPutImage(image);
     }
 
-    private void drawImage(java.awt.Image image, Graphics g, int localOffset) {
-        Viewport viewport = adjustedViewportTo(image);
-        g.drawImage(
-                image,
-                viewport.x() + localOffset + globalOffset.get(),
-                viewport.y(),
-                viewport.width(),
-                viewport.height(),
-                null
-        );
-    }
-
-    private Viewport adjustedViewportTo(java.awt.Image image) {
-        return Viewport.from(
-                        this.getWidth(),
-                        this.getHeight()
-                )
-                .adjustedViewportFrom(
-                        image.getWidth(null),
-                        image.getHeight(null)
-                );
     private Optional<java.awt.Image> tryPutImage(Image image) {
         try {
             return imageCache.put(image, imageConverter.from(image));
