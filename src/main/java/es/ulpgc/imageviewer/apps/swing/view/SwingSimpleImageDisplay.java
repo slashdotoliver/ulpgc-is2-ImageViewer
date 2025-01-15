@@ -2,8 +2,8 @@ package es.ulpgc.imageviewer.apps.swing.view;
 
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageCache;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageConverter;
-import es.ulpgc.imageviewer.apps.swing.control.io.SwingImageDeserializer;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageDrawer;
+import es.ulpgc.imageviewer.apps.swing.io.SwingImageDeserializer;
 import es.ulpgc.imageviewer.apps.swing.utils.JPanelBuilder;
 import es.ulpgc.imageviewer.architecture.control.Cache;
 import es.ulpgc.imageviewer.architecture.control.Converter;

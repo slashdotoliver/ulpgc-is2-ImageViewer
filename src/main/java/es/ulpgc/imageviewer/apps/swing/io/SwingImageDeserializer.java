@@ -1,4 +1,4 @@
-package es.ulpgc.imageviewer.apps.swing.control.io;
+package es.ulpgc.imageviewer.apps.swing.io;
 
 import es.ulpgc.imageviewer.architecture.io.Deserializer;
 
