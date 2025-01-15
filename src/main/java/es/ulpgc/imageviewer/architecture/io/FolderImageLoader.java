@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Optional;
 import java.util.Set;
 
 public class FolderImageLoader implements ImageLoader {
