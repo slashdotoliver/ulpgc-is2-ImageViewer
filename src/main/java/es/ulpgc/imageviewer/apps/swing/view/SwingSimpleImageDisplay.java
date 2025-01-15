@@ -130,16 +130,12 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     public void paint(Graphics g) {
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, getWidth(), getHeight());
-        convertCurrentImage().ifPresent(image -> drawImage(image, g));
+        drawImage(g);
         super.paint(g);
     }
 
-    private Optional<java.awt.Image> convertCurrentImage() {
-        return currentImage.map(
-                image -> imageCache.has(image)
-                        ? imageCache.get(image)
-                        : imageCache.put(image, imageConverter.from(image))
-        );
+    private void drawImage(Graphics g) {
+        currentImage.accessUsing(image -> convert(image).ifPresent(i -> drawImage(i, g)));
     }
 
     private void drawImage(java.awt.Image image, Graphics g) {
@@ -163,6 +159,17 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
                         image.getWidth(null),
                         image.getHeight(null)
                 );
+    private Optional<java.awt.Image> convert(Image image) {
+        return imageCache.has(image)
+                ? imageCache.get(image)
+                : tryPutImage(image);
     }
 
+    private Optional<java.awt.Image> tryPutImage(Image image) {
+        try {
+            return imageCache.put(image, imageConverter.from(image));
+        } catch (Converter.ConversionException e) {
+            return Optional.empty();
+        }
+    }
 }

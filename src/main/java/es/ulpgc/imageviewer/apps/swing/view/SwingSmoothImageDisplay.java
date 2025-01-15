@@ -171,29 +171,26 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
     public void paint(Graphics g) {
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, getWidth(), getHeight());
-        drawImages(
-                currentImage.map(
-                        image -> Map.of(
-                                ImageDisplayContext.Previous, convert(image.previous()),
-                                ImageDisplayContext.Current, convert(image),
-                                ImageDisplayContext.Next, convert(image.next())
-                        )
-                ),
-                g
-        );
+        drawImages(g);
         super.paint(g);
+    }
+
+    private void drawImages(Graphics g) {
+        currentImage.accessUsing(image -> {
+            convert(image.previous()).ifPresent(i -> drawImage(i, g, -getWidth()));
+            convert(image).ifPresent(i -> drawImage(i, g, 0));
+            convert(image.next()).ifPresent(i -> drawImage(i , g, +getWidth()));
+        });
     }
 
     private Optional<java.awt.Image> convert(Image image) {
         return imageCache.has(image)
                 ? imageCache.get(image)
-                : imageCache.put(image, imageConverter.from(image));
-    }
-
     private void drawImages(Map<ImageDisplayContext, Optional<java.awt.Image>> images, Graphics g) {
         images.get(ImageDisplayContext.Previous).ifPresent(image -> drawImage(image, g, -getWidth()));
         images.get(ImageDisplayContext.Current).ifPresent(image -> drawImage(image, g, 0));
         images.get(ImageDisplayContext.Next).ifPresent(image -> drawImage(image, g, +getWidth()));
+                : tryPutImage(image);
     }
 
     private void drawImage(java.awt.Image image, Graphics g, int localOffset) {
@@ -217,6 +214,11 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
                         image.getWidth(null),
                         image.getHeight(null)
                 );
+    private Optional<java.awt.Image> tryPutImage(Image image) {
+        try {
+            return imageCache.put(image, imageConverter.from(image));
+        } catch (Converter.ConversionException e) {
+            return Optional.empty();
+        }
     }
-
 }

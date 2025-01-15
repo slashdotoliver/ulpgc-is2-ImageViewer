@@ -66,9 +66,9 @@ public class FolderImageLoader implements ImageLoader {
     public Image imageAt(int index) {
         return new Image() {
             @Override
-            public byte[] content() throws IOException {
+            public Optional<byte[]> content() throws IOException {
                 try {
-                    return Files.readAllBytes(currentFile().toPath());
+                    return Optional.of(Files.readAllBytes(currentFile().toPath()));
                 } catch (SecurityException | OutOfMemoryError e) {
                     throw new IOException(e);
                 }

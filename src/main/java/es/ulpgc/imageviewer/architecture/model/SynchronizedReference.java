@@ -1,6 +1,6 @@
 package es.ulpgc.imageviewer.architecture.model;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 public class SynchronizedReference<V> {
 
@@ -10,11 +10,11 @@ public class SynchronizedReference<V> {
         value = initialValue;
     }
 
-    public synchronized <O> O map(Function<V, O> mapper) {
-        return mapper.apply(value);
-    }
-
     public synchronized void set(V newValue) {
         value = newValue;
+    }
+
+    public synchronized void accessUsing(Consumer<V> consumer) {
+        consumer.accept(value);
     }
 }

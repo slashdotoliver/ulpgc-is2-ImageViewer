@@ -15,11 +15,15 @@ public class SwingImageConverter implements Converter<Image, java.awt.Image> {
     }
 
     @Override
-    public java.awt.Image from(Image image) {
+    public java.awt.Image from(Image image) throws ConversionException {
         try {
-            return deserializer.deserialize(image.content());
-        } catch (IOException ignored) {
-            return null;
+            return deserializer.deserialize(image.content()
+                    .orElseThrow(() -> new ConversionException(
+                            "Failed conversion: Converting an image without content"
+                    ))
+            );
+        } catch (IOException e) {
+            throw new ConversionException(e);
         }
     }
 }

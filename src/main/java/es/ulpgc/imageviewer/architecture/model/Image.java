@@ -1,18 +1,19 @@
 package es.ulpgc.imageviewer.architecture.model;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 public interface Image {
-    byte[] content() throws IOException;
+    Optional<byte[]> content() throws IOException;
     Image next();
     Image previous();
     String name();
 
     Image None = new Image() {
         @Override
-        public byte[] content() {
-            return null;
+        public Optional<byte[]> content() {
+            return Optional.empty();
         }
 
         @Override
