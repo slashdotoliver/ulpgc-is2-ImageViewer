@@ -1,14 +1,14 @@
 package es.ulpgc.imageviewer.apps.swing;
 
 import es.ulpgc.imageviewer.apps.swing.model.SwingAppArguments;
-import es.ulpgc.imageviewer.apps.swing.view.SwingFolderDialog;
-import es.ulpgc.imageviewer.apps.swing.view.SwingMainFrame;
-import es.ulpgc.imageviewer.apps.swing.view.SwingSmoothImageDisplay;
-import es.ulpgc.imageviewer.architecture.control.commands.CommandFactory;
-import es.ulpgc.imageviewer.architecture.control.commands.OpenImageFolderCommand;
-import es.ulpgc.imageviewer.architecture.control.presenters.ImagePresenter;
-import es.ulpgc.imageviewer.architecture.control.presenters.SmoothImagePresenter;
-import es.ulpgc.imageviewer.architecture.view.ErrorDisplay;
+import es.ulpgc.imageviewer.apps.swing.view.dialogs.SwingFolderDialog;
+import es.ulpgc.imageviewer.apps.swing.view.displays.SwingSmoothImageDisplay;
+import es.ulpgc.imageviewer.apps.swing.view.frames.SwingMainFrame;
+import es.ulpgc.imageviewer.architecture.commands.CommandFactory;
+import es.ulpgc.imageviewer.architecture.commands.OpenImageFolderCommand;
+import es.ulpgc.imageviewer.architecture.presenter.ImagePresenter;
+import es.ulpgc.imageviewer.architecture.presenter.SmoothImagePresenter;
+import es.ulpgc.imageviewer.architecture.view.displays.ErrorDisplay;
 
 import javax.swing.*;
 import java.io.File;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import static es.ulpgc.imageviewer.architecture.control.commands.CommandName.OpenFolderCommand;
+import static es.ulpgc.imageviewer.architecture.commands.CommandName.OpenFolderCommand;
 
 public class SwingMain {
 
