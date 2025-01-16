@@ -29,16 +29,21 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     private final JLabel nameLabel = createNameLabel();
     private OnClickListener previousImageListener = OnClickListener.None;
     private OnClickListener nextImageListener = OnClickListener.None;
-    private ImageDrawer drawer;
+    private ImageDrawer drawer = defaultImageDrawer();
 
-    public SwingSimpleImageDisplay() {
-        this.drawer = (image, g) -> convert(image).ifPresent(i -> drawImage(i, g, 0));
+    public SwingSimpleImageDisplay(CachedConverter<Image, java.awt.Image> converter) {
+        this.converter = converter;
         setLayout(new BorderLayout());
         setBackground(BACKGROUND_COLOR);
         setOpaque(false);
 
         add(createCenterPanel(), BorderLayout.CENTER);
         add(createBottomPanel(), BorderLayout.SOUTH);
+    }
+
+    private ImageDrawer defaultImageDrawer() {
+        return (image, g) -> converter.tryGetConverted(image)
+                .ifPresent(i -> SwingImageDrawer.drawImage(i, g, 0, getSize()));
     }
 
     public void setImageDrawer(ImageDrawer drawer) {
@@ -86,14 +91,14 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
                 .build();
     }
 
-    private Component createPreviousButton(JButtonBuilder builder) {
+    private JButton createPreviousButton(JButtonBuilder builder) {
         return builder
                 .setActionListener(_ -> previousImageListener.clickPerformed())
                 .setText("<")
                 .build();
     }
 
-    private Component createNextButton(JButtonBuilder builder) {
+    private JButton createNextButton(JButtonBuilder builder) {
         return builder
                 .setActionListener(_ -> nextImageListener.clickPerformed())
                 .setText(">")
