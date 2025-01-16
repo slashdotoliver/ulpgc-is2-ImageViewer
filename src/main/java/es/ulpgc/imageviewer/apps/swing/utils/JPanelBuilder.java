@@ -9,17 +9,17 @@ import java.util.Optional;
 
 public class JPanelBuilder {
 
-    public interface LayoutConfigurator {
+    private interface PanelConfigurator {
         void configure(JPanel panel);
     }
 
-    private final LayoutConfigurator layoutConfigurator;
+    private final PanelConfigurator panelConfigurator;
     private final List<Component> components = new ArrayList<>();
     private Optional<Boolean> opaque = Optional.empty();
     private Optional<Color> background = Optional.empty();
 
-    public JPanelBuilder(LayoutConfigurator layoutConfigurator) {
-        this.layoutConfigurator = layoutConfigurator;
+    private JPanelBuilder(PanelConfigurator panelConfigurator) {
+        this.panelConfigurator = panelConfigurator;
     }
 
     public static JPanelBuilder withBoxLayout(int axis) {
@@ -47,7 +47,7 @@ public class JPanelBuilder {
 
     public JPanel build() {
         JPanel panel = new JPanel();
-        layoutConfigurator.configure(panel);
+        panelConfigurator.configure(panel);
         components.forEach(panel::add);
         opaque.ifPresent(panel::setOpaque);
         background.ifPresent(panel::setBackground);
