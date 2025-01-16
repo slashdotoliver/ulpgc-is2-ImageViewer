@@ -7,9 +7,9 @@ import es.ulpgc.imageviewer.apps.swing.view.SwingSmoothImageDisplay;
 import es.ulpgc.imageviewer.architecture.control.commands.Command;
 import es.ulpgc.imageviewer.architecture.control.commands.CommandName;
 import es.ulpgc.imageviewer.architecture.control.commands.OpenImageFolderCommand;
-import es.ulpgc.imageviewer.architecture.io.FolderImageLoader;
 import es.ulpgc.imageviewer.architecture.control.presenters.ImagePresenter;
 import es.ulpgc.imageviewer.architecture.control.presenters.SmoothImagePresenter;
+import es.ulpgc.imageviewer.architecture.io.FolderImageLoader;
 import es.ulpgc.imageviewer.architecture.view.ErrorDisplay;
 
 import javax.swing.*;
