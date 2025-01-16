@@ -1,13 +1,9 @@
 package es.ulpgc.imageviewer.apps.swing.view.displays;
 
-import es.ulpgc.imageviewer.apps.swing.data.SwingImageCache;
-import es.ulpgc.imageviewer.apps.swing.data.io.SwingImageDeserializer;
-import es.ulpgc.imageviewer.apps.swing.model.SwingImageConverter;
 import es.ulpgc.imageviewer.apps.swing.utils.JButtonBuilder;
 import es.ulpgc.imageviewer.apps.swing.utils.JPanelBuilder;
 import es.ulpgc.imageviewer.apps.swing.view.SwingImageDrawer;
-import es.ulpgc.imageviewer.architecture.data.Cache;
-import es.ulpgc.imageviewer.architecture.model.Converter;
+import es.ulpgc.imageviewer.architecture.model.CachedConverter;
 import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.model.entities.SynchronizedReference;
 import es.ulpgc.imageviewer.architecture.view.displays.SimpleImageDisplay;
@@ -18,7 +14,6 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Optional;
 
 public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDisplay {
 
@@ -29,8 +24,7 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
     private static final Color BACKGROUND_COLOR = Color.darkGray;
 
-    private final Cache<Image, java.awt.Image> imageCache = new SwingImageCache<String>().withKeyMapping(Image::name);
-    private final Converter<Image, java.awt.Image> imageConverter = new SwingImageConverter(new SwingImageDeserializer());
+    private final CachedConverter<Image, java.awt.Image> converter;
     private final SynchronizedReference<Image> currentImage = new SynchronizedReference<>(Image.None);
     private final JLabel nameLabel = createNameLabel();
     private OnClickListener previousImageListener = OnClickListener.None;
@@ -125,7 +119,7 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     @Override
     public void reset() {
-        imageCache.clear();
+        converter.clearCache();
         previousImageListener = OnClickListener.None;
         nextImageListener = OnClickListener.None;
         show(Image.None);
@@ -141,23 +135,5 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     private void drawImage(Graphics g) {
         currentImage.accessUsing(image -> drawer.draw(image, g));
-    }
-
-    public void drawImage(java.awt.Image image, Graphics g, int offset) {
-        SwingImageDrawer.drawImage(image, g, offset, getSize());
-    }
-
-    public Optional<java.awt.Image> convert(Image image) {
-        return imageCache.has(image)
-                ? imageCache.get(image)
-                : tryPutImage(image);
-    }
-
-    private Optional<java.awt.Image> tryPutImage(Image image) {
-        try {
-            return imageCache.put(image, imageConverter.from(image));
-        } catch (Converter.ConversionException e) {
-            return Optional.empty();
-        }
     }
 }

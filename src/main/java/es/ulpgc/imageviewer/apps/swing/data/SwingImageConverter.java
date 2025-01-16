@@ -1,8 +1,8 @@
-package es.ulpgc.imageviewer.apps.swing.model;
+package es.ulpgc.imageviewer.apps.swing.data;
 
 import es.ulpgc.imageviewer.architecture.data.io.Deserializer;
-import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.model.Converter;
+import es.ulpgc.imageviewer.architecture.model.entities.Image;
 
 import java.io.IOException;
 
