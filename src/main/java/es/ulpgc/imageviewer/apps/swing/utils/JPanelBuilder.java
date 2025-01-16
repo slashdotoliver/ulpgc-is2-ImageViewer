@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.*;
+
 public class JPanelBuilder {
 
     private interface PanelConfigurator {
@@ -15,15 +17,15 @@ public class JPanelBuilder {
 
     private final PanelConfigurator panelConfigurator;
     private final List<Component> components = new ArrayList<>();
-    private Optional<Boolean> opaque = Optional.empty();
-    private Optional<Color> background = Optional.empty();
+    private Optional<Boolean> opaque = empty();
+    private Optional<Color> background = empty();
 
     private JPanelBuilder(PanelConfigurator panelConfigurator) {
         this.panelConfigurator = panelConfigurator;
     }
 
-    public static JPanelBuilder withBoxLayout(int axis) {
-        return new JPanelBuilder(panel -> panel.setLayout(new BoxLayout(panel, axis)));
+    public static JPanelBuilder withBoxLayout(int boxLayoutAxis) {
+        return new JPanelBuilder(panel -> panel.setLayout(new BoxLayout(panel, boxLayoutAxis)));
     }
 
     public static JPanelBuilder withFlowLayout() {
@@ -31,7 +33,7 @@ public class JPanelBuilder {
     }
 
     public JPanelBuilder setOpaque(boolean value) {
-        this.opaque = Optional.of(value);
+        this.opaque = of(value);
         return this;
     }
 
@@ -41,7 +43,7 @@ public class JPanelBuilder {
     }
 
     public JPanelBuilder setBackground(Color backgroundColor) {
-        this.background = Optional.ofNullable(backgroundColor);
+        this.background = ofNullable(backgroundColor);
         return this;
     }
 

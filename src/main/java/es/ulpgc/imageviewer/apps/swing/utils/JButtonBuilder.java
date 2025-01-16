@@ -6,8 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.util.Optional;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
+import static java.util.Optional.*;
 
 public class JButtonBuilder {
 
