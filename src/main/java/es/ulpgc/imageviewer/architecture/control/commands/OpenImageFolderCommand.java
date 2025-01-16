@@ -19,15 +19,15 @@ public record OpenImageFolderCommand(
 
     @Override
     public void execute() {
-        Optional<File> folder = folderDialog.get();
+        Optional<File> folder = folderDialog.tryGet();
         if (folder.isEmpty()) return;
 
-        Optional<FolderImageLoader> loader = createLoader(folder.get());
+        Optional<FolderImageLoader> loader = tryCreateLoader(folder.get());
 
         loader.ifPresent(presenter::showUsing);
     }
 
-    private Optional<FolderImageLoader> createLoader(File folder) {
+    private Optional<FolderImageLoader> tryCreateLoader(File folder) {
         try {
             return Optional.of(new FolderImageLoader(folder));
         } catch (EmptyImageFolderException | IOException e) {

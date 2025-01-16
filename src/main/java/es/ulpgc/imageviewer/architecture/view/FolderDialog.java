@@ -4,5 +4,5 @@ import java.io.File;
 import java.util.Optional;
 
 public interface FolderDialog {
-    Optional<File> get();
+    Optional<File> tryGet();
 }

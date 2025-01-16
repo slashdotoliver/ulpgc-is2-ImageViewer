@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class SwingFolderDialog implements FolderDialog {
     @Override
-    public Optional<File> get() {
+    public Optional<File> tryGet() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (fileChooser.showOpenDialog(new JFrame("Select Folder")) == JFileChooser.APPROVE_OPTION)
