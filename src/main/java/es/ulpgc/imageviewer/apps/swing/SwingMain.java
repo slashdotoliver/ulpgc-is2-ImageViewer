@@ -4,26 +4,25 @@ import es.ulpgc.imageviewer.apps.swing.model.SwingAppArguments;
 import es.ulpgc.imageviewer.apps.swing.view.SwingFolderDialog;
 import es.ulpgc.imageviewer.apps.swing.view.SwingMainFrame;
 import es.ulpgc.imageviewer.apps.swing.view.SwingSmoothImageDisplay;
-import es.ulpgc.imageviewer.architecture.control.commands.Command;
-import es.ulpgc.imageviewer.architecture.control.commands.CommandName;
+import es.ulpgc.imageviewer.architecture.control.commands.CommandFactory;
 import es.ulpgc.imageviewer.architecture.control.commands.OpenImageFolderCommand;
 import es.ulpgc.imageviewer.architecture.control.presenters.ImagePresenter;
 import es.ulpgc.imageviewer.architecture.control.presenters.SmoothImagePresenter;
-import es.ulpgc.imageviewer.architecture.io.FolderImageLoader;
 import es.ulpgc.imageviewer.architecture.view.ErrorDisplay;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
-import static es.ulpgc.imageviewer.architecture.io.FolderImageLoader.EmptyImageFolderException;
+import static es.ulpgc.imageviewer.architecture.control.commands.CommandName.OpenFolderCommand;
 
 public class SwingMain {
 
-    private static final Map<CommandName, Command> COMMANDS = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(SwingMain.class.getSimpleName());
+    private static final CommandFactory COMMAND_FACTORY = new CommandFactory();
     private static ImagePresenter presenter;
     private static SwingMainFrame mainFrame;
 
@@ -48,22 +47,18 @@ public class SwingMain {
     }
 
     private static void registerOpenFolderCommand() {
-        COMMANDS.put(CommandName.OpenFolderCommand, new OpenImageFolderCommand(
+        COMMAND_FACTORY.register(OpenFolderCommand, new OpenImageFolderCommand(
                 mainFrame.getErrorDisplay(),
                 new SwingFolderDialog(),
                 presenter
         ));
         mainFrame.getOpenFolderMenuItem().addActionListener(
-                _ -> COMMANDS.get(CommandName.OpenFolderCommand).execute()
+                _ -> COMMAND_FACTORY.get(OpenFolderCommand).execute()
         );
     }
 
     private static void tryShowing(File folder, ErrorDisplay errorDisplay) {
-        try {
-            presenter.showUsing(new FolderImageLoader(folder));
-        } catch (IOException | EmptyImageFolderException e) {
-            errorDisplay.show(e.getMessage());
-        }
+        new OpenImageFolderCommand(errorDisplay, () -> Optional.of(folder), presenter).execute();
     }
 
     private static void changeLookAndFeel() {
