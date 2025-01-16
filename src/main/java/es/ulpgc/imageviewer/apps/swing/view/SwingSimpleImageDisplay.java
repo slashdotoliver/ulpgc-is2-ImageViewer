@@ -60,11 +60,15 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     }
 
     private JPanel createCenterPanel() {
+        JButtonBuilder buttonBuilder = new JButtonBuilder()
+                .setMaximumSize(BUTTON_SIZE)
+                .setPreferredSize(BUTTON_SIZE)
+                .setKeyListener(createArrowKeysListener());
         return JPanelBuilder.withBoxLayout(BoxLayout.X_AXIS)
                 .setOpaque(false)
-                .add(createPreviousButton())
+                .add(createPreviousButton(buttonBuilder))
                 .add(Box.createGlue())
-                .add(createNextButton())
+                .add(createNextButton(buttonBuilder))
                 .build();
     }
 
@@ -78,22 +82,18 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
                 .build();
     }
 
-    private Component createPreviousButton() {
-        JButton previousImageButton = new JButton("<");
-        previousImageButton.setMaximumSize(BUTTON_SIZE);
-        previousImageButton.setPreferredSize(BUTTON_SIZE);
-        previousImageButton.addActionListener(_ -> previousImageListener.clickPerformed());
-        previousImageButton.addKeyListener(arrowKeysListener);
-        return previousImageButton;
+    private Component createPreviousButton(JButtonBuilder builder) {
+        return builder
+                .setActionListener(_ -> previousImageListener.clickPerformed())
+                .setText("<")
+                .build();
     }
 
-    private Component createNextButton() {
-        JButton nextImageButton = new JButton(">");
-        nextImageButton.setMaximumSize(BUTTON_SIZE);
-        nextImageButton.setPreferredSize(BUTTON_SIZE);
-        nextImageButton.addActionListener(_ -> nextImageListener.clickPerformed());
-        nextImageButton.addKeyListener(arrowKeysListener);
-        return nextImageButton;
+    private Component createNextButton(JButtonBuilder builder) {
+        return builder
+                .setActionListener(_ -> nextImageListener.clickPerformed())
+                .setText(">")
+                .build();
     }
 
     @Override
