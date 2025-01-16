@@ -4,6 +4,7 @@ import es.ulpgc.imageviewer.apps.swing.control.SwingImageCache;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageConverter;
 import es.ulpgc.imageviewer.apps.swing.control.SwingImageDrawer;
 import es.ulpgc.imageviewer.apps.swing.io.SwingImageDeserializer;
+import es.ulpgc.imageviewer.apps.swing.utils.JButtonBuilder;
 import es.ulpgc.imageviewer.apps.swing.utils.JPanelBuilder;
 import es.ulpgc.imageviewer.architecture.control.Cache;
 import es.ulpgc.imageviewer.architecture.control.Converter;
@@ -21,24 +22,33 @@ import java.util.Optional;
 
 public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDisplay {
 
+    public interface ImageDrawer {
+        void draw(Image current, Graphics g);
+    }
+
     private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
     private static final Color BACKGROUND_COLOR = Color.darkGray;
 
     private final Cache<Image, java.awt.Image> imageCache = new SwingImageCache<String>().withKeyMapping(Image::name);
     private final Converter<Image, java.awt.Image> imageConverter = new SwingImageConverter(new SwingImageDeserializer());
     private final SynchronizedReference<Image> currentImage = new SynchronizedReference<>(Image.None);
-    private final KeyListener arrowKeysListener = createArrowKeysListener();
     private final JLabel nameLabel = createNameLabel();
     private OnClickListener previousImageListener = OnClickListener.None;
     private OnClickListener nextImageListener = OnClickListener.None;
+    private ImageDrawer drawer;
 
     public SwingSimpleImageDisplay() {
+        this.drawer = (image, g) -> convert(image).ifPresent(i -> drawImage(i, g, 0));
         setLayout(new BorderLayout());
         setBackground(BACKGROUND_COLOR);
         setOpaque(false);
 
         add(createCenterPanel(), BorderLayout.CENTER);
         add(createBottomPanel(), BorderLayout.SOUTH);
+    }
+
+    public void setImageDrawer(ImageDrawer drawer) {
+        this.drawer = drawer;
     }
 
     private KeyListener createArrowKeysListener() {
@@ -130,14 +140,14 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     }
 
     private void drawImage(Graphics g) {
-        currentImage.accessUsing(image -> convert(image).ifPresent(i -> drawImage(i, g)));
+        currentImage.accessUsing(image -> drawer.draw(image, g));
     }
 
-    private void drawImage(java.awt.Image image, Graphics g) {
-        SwingImageDrawer.drawImage(image, g, 0, getSize());
+    public void drawImage(java.awt.Image image, Graphics g, int offset) {
+        SwingImageDrawer.drawImage(image, g, offset, getSize());
     }
 
-    private Optional<java.awt.Image> convert(Image image) {
+    public Optional<java.awt.Image> convert(Image image) {
         return imageCache.has(image)
                 ? imageCache.get(image)
                 : tryPutImage(image);

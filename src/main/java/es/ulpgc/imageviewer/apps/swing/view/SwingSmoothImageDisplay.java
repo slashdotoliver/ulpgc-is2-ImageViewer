@@ -1,14 +1,6 @@
 package es.ulpgc.imageviewer.apps.swing.view;
 
-import es.ulpgc.imageviewer.apps.swing.control.SwingImageCache;
-import es.ulpgc.imageviewer.apps.swing.control.SwingImageConverter;
-import es.ulpgc.imageviewer.apps.swing.control.SwingImageDrawer;
-import es.ulpgc.imageviewer.apps.swing.io.SwingImageDeserializer;
-import es.ulpgc.imageviewer.apps.swing.utils.JPanelBuilder;
-import es.ulpgc.imageviewer.architecture.control.Cache;
-import es.ulpgc.imageviewer.architecture.control.Converter;
 import es.ulpgc.imageviewer.architecture.model.Image;
-import es.ulpgc.imageviewer.architecture.model.SynchronizedReference;
 import es.ulpgc.imageviewer.architecture.view.SmoothImageDisplay;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnClickListener;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnDraggingListener;
@@ -16,33 +8,27 @@ import es.ulpgc.imageviewer.architecture.view.listeners.OnReleaseListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.Optional;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDisplay {
 
-    private static final Dimension BUTTON_SIZE = new Dimension(50, 50);
-    private static final Color BACKGROUND_COLOR = Color.darkGray;
-
-    private final Cache<Image, java.awt.Image> imageCache = new SwingImageCache<String>().withKeyMapping(Image::name);
-    private final Converter<Image, java.awt.Image> imageConverter = new SwingImageConverter(new SwingImageDeserializer());
-    private final SynchronizedReference<Image> currentImage = new SynchronizedReference<>(Image.None);
+    private final SwingSimpleImageDisplay display;
     private final AtomicInteger globalOffset = new AtomicInteger(0);
-    private final KeyListener arrowKeysListener = createArrowKeysListener();
-    private final JLabel nameLabel = createNameLabel();
-    private OnClickListener previousImageListener = OnClickListener.None;
-    private OnClickListener nextImageListener = OnClickListener.None;
     private OnDraggingListener draggingListener = OnDraggingListener.None;
     private OnReleaseListener releasedListener = OnReleaseListener.None;
 
     public SwingSmoothImageDisplay() {
         setLayout(new BorderLayout());
-        setBackground(BACKGROUND_COLOR);
-        setOpaque(false);
+        add(display = new SwingSimpleImageDisplay(), BorderLayout.CENTER);
 
-        add(createCenterPanel(), BorderLayout.CENTER);
-        add(createBottomPanel(), BorderLayout.SOUTH);
+        display.setImageDrawer((image, g) -> {
+            display.convert(image.previous()).ifPresent(i -> display.drawImage(i, g, globalOffset.get() - getWidth()));
+            display.convert(image).ifPresent(i -> display.drawImage(i, g, globalOffset.get()));
+            display.convert(image.next()).ifPresent(i -> display.drawImage(i, g, globalOffset.get() + getWidth()));
+        });
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -58,77 +44,20 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
         });
     }
 
-    private KeyListener createArrowKeysListener() {
-        return new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT -> previousImageListener.clickPerformed();
-                    case KeyEvent.VK_RIGHT -> nextImageListener.clickPerformed();
-                }
-            }
-        };
-    }
-
-    private JLabel createNameLabel() {
-        JLabel label = new JLabel("");
-        label.setForeground(Color.white);
-        return label;
-    }
-
-    private JPanel createCenterPanel() {
-        return JPanelBuilder.withBoxLayout(BoxLayout.X_AXIS)
-                .setOpaque(false)
-                .add(createPreviousButton())
-                .add(Box.createGlue())
-                .add(createNextButton())
-                .build();
-    }
-
-    private JPanel createBottomPanel() {
-        return JPanelBuilder.withFlowLayout()
-                .setOpaque(false)
-                .add(JPanelBuilder.withFlowLayout()
-                        .setBackground(BACKGROUND_COLOR)
-                        .add(nameLabel)
-                        .build())
-                .build();
-    }
-
-    private Component createPreviousButton() {
-        JButton previousImageButton = new JButton("<");
-        previousImageButton.setMaximumSize(BUTTON_SIZE);
-        previousImageButton.setPreferredSize(BUTTON_SIZE);
-        previousImageButton.addActionListener(_ -> previousImageListener.clickPerformed());
-        previousImageButton.addKeyListener(arrowKeysListener);
-        return previousImageButton;
-    }
-
-    private Component createNextButton() {
-        JButton nextImageButton = new JButton(">");
-        nextImageButton.setMaximumSize(BUTTON_SIZE);
-        nextImageButton.setPreferredSize(BUTTON_SIZE);
-        nextImageButton.addActionListener(_ -> nextImageListener.clickPerformed());
-        nextImageButton.addKeyListener(arrowKeysListener);
-        return nextImageButton;
-    }
-
     @Override
     public void show(Image image) {
-        nameLabel.setText(image.name());
-        currentImage.set(image);
         globalOffset.set(0);
-        repaint();
+        display.show(image);
     }
 
     @Override
     public void setPreviousImageButtonListener(OnClickListener listener) {
-        previousImageListener = listener;
+        display.setPreviousImageButtonListener(listener);
     }
 
     @Override
     public void setNextImageButtonListener(OnClickListener listener) {
-        nextImageListener = listener;
+        display.setNextImageButtonListener(listener);
     }
 
     @Override
@@ -143,51 +72,14 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
 
     @Override
     public void reset() {
-        imageCache.clear();
-        previousImageListener = OnClickListener.None;
-        nextImageListener = OnClickListener.None;
         draggingListener = OnDraggingListener.None;
         releasedListener = OnReleaseListener.None;
-        show(Image.None);
+        display.reset();
     }
 
     @Override
     public void setGlobalOffset(int value) {
         globalOffset.set(value);
         repaint();
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        g.setColor(Color.darkGray);
-        g.fillRect(0, 0, getWidth(), getHeight());
-        drawImages(g);
-        super.paint(g);
-    }
-
-    private void drawImages(Graphics g) {
-        currentImage.accessUsing(image -> {
-            convert(image.previous()).ifPresent(i -> drawImage(i, g, -getWidth()));
-            convert(image).ifPresent(i -> drawImage(i, g, 0));
-            convert(image.next()).ifPresent(i -> drawImage(i , g, +getWidth()));
-        });
-    }
-
-    private void drawImage(java.awt.Image image, Graphics g, int localOffset) {
-        SwingImageDrawer.drawImage(image, g, localOffset + globalOffset.get(), getSize());
-    }
-
-    private Optional<java.awt.Image> convert(Image image) {
-        return imageCache.has(image)
-                ? imageCache.get(image)
-                : tryPutImage(image);
-    }
-
-    private Optional<java.awt.Image> tryPutImage(Image image) {
-        try {
-            return imageCache.put(image, imageConverter.from(image));
-        } catch (Converter.ConversionException e) {
-            return Optional.empty();
-        }
     }
 }
