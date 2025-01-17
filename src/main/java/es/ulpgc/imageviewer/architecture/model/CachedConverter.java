@@ -2,7 +2,7 @@ package es.ulpgc.imageviewer.architecture.model;
 
 import java.util.Optional;
 
-public interface CachedConverter<K, V> {
-    Optional<V> tryGetConverted(K value);
+public interface CachedConverter<A, B> {
+    Optional<B> tryGetConverted(A value);
     void clearCache();
 }
