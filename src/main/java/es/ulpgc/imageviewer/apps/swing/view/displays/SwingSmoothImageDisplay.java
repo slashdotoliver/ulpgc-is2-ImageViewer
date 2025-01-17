@@ -1,7 +1,6 @@
 package es.ulpgc.imageviewer.apps.swing.view.displays;
 
 import es.ulpgc.imageviewer.apps.swing.data.SwingImageCachedConverter;
-import es.ulpgc.imageviewer.apps.swing.view.SwingImageDrawer;
 import es.ulpgc.imageviewer.architecture.model.CachedConverter;
 import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.view.displays.SmoothImageDisplay;
@@ -15,6 +14,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static es.ulpgc.imageviewer.apps.swing.view.SwingImageDrawer.drawImage;
 
 public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDisplay {
 
@@ -52,7 +53,7 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
     }
 
     private void drawConvertingWith(CachedConverter<Image, java.awt.Image> converter, Image image, int offset, Graphics g) {
-        converter.tryGetConverted(image).ifPresent(i -> SwingImageDrawer.drawImage(i, g, offset, imageDisplay.getSize()));
+        converter.tryGetConverted(image).ifPresent(i -> drawImage(i, g, offset, imageDisplay.getSize()));
     }
 
     @Override

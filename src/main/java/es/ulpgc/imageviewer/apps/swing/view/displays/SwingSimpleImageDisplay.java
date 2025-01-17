@@ -2,7 +2,6 @@ package es.ulpgc.imageviewer.apps.swing.view.displays;
 
 import es.ulpgc.imageviewer.apps.swing.utils.JButtonBuilder;
 import es.ulpgc.imageviewer.apps.swing.utils.JPanelBuilder;
-import es.ulpgc.imageviewer.apps.swing.view.SwingImageDrawer;
 import es.ulpgc.imageviewer.architecture.model.CachedConverter;
 import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.model.entities.SynchronizedReference;
@@ -14,6 +13,8 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import static es.ulpgc.imageviewer.apps.swing.view.SwingImageDrawer.drawImage;
 
 public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDisplay {
 
@@ -43,7 +44,7 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     private ImageDrawer defaultImageDrawer() {
         return (image, g) -> converter.tryGetConverted(image)
-                .ifPresent(i -> SwingImageDrawer.drawImage(i, g, 0, getSize()));
+                .ifPresent(i -> drawImage(i, g, 0, getSize()));
     }
 
     public void setImageDrawer(ImageDrawer drawer) {
@@ -134,11 +135,11 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     public void paint(Graphics g) {
         g.setColor(Color.darkGray);
         g.fillRect(0, 0, getWidth(), getHeight());
-        drawImage(g);
+        drawWithImageDrawer(g);
         super.paint(g);
     }
 
-    private void drawImage(Graphics g) {
+    private void drawWithImageDrawer(Graphics g) {
         currentImage.accessUsing(image -> drawer.draw(image, g));
     }
 }
