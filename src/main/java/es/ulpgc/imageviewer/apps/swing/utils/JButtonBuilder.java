@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.util.Optional;
 
-import static java.util.Optional.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 public class JButtonBuilder {
 
@@ -27,12 +28,12 @@ public class JButtonBuilder {
     }
 
     public JButtonBuilder setMaximumSize(Dimension maximumSize) {
-        this.maximumSize = Optional.ofNullable(maximumSize);
+        this.maximumSize = ofNullable(maximumSize);
         return this;
     }
 
     public JButtonBuilder setPreferredSize(Dimension preferredSize) {
-        this.preferredSize = Optional.ofNullable(preferredSize);
+        this.preferredSize = ofNullable(preferredSize);
         return this;
     }
 

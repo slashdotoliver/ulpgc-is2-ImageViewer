@@ -3,10 +3,10 @@ package es.ulpgc.imageviewer.apps.swing.utils;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Optional.*;
 
 public class JPanelBuilder {
@@ -38,7 +38,7 @@ public class JPanelBuilder {
     }
 
     public JPanelBuilder add(Component... components) {
-        this.components.addAll(Arrays.asList(components));
+        this.components.addAll(asList(components));
         return this;
     }
 
