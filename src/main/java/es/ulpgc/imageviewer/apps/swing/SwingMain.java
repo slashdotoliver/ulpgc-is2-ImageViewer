@@ -1,6 +1,7 @@
 package es.ulpgc.imageviewer.apps.swing;
 
 import es.ulpgc.imageviewer.apps.swing.model.SwingAppArguments;
+import es.ulpgc.imageviewer.apps.swing.utils.LookAndFeelHelper;
 import es.ulpgc.imageviewer.apps.swing.view.dialogs.SwingFolderDialog;
 import es.ulpgc.imageviewer.apps.swing.view.displays.SwingSmoothImageDisplay;
 import es.ulpgc.imageviewer.apps.swing.view.frames.SwingMainFrame;
@@ -12,7 +13,6 @@ import es.ulpgc.imageviewer.architecture.view.displays.ErrorDisplay;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -27,7 +27,10 @@ public class SwingMain {
     private static SwingMainFrame mainFrame;
 
     public static void main(String[] args) {
-        changeLookAndFeel();
+        changeLookAndFeel(List.of(
+                "javax.swing.plaf.nimbus.NimbusLookAndFeel",
+                "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
+        ));
 
         SwingSmoothImageDisplay imageDisplay = new SwingSmoothImageDisplay();
         mainFrame = new SwingMainFrame(imageDisplay, "Smooth Image Viewer");
@@ -61,33 +64,11 @@ public class SwingMain {
         new OpenImageFolderCommand(errorDisplay, () -> Optional.of(folder), presenter).execute();
     }
 
-    private static void changeLookAndFeel() {
-        Optional<String> look = findFirstOccurrence(
-                List.of(
-                        "javax.swing.plaf.nimbus.NimbusLookAndFeel",
-                        "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
-                ),
-                Arrays.stream(UIManager.getInstalledLookAndFeels())
-                        .map(UIManager.LookAndFeelInfo::getClassName)
-                        .toList()
-        );
-        if (look.isEmpty()) return;
+    private static void changeLookAndFeel(List<String> preferences) {
         try {
-            UIManager.setLookAndFeel(look.get());
-        } catch (
-                ClassNotFoundException |
-                InstantiationException |
-                IllegalAccessException |
-                UnsupportedLookAndFeelException e
-        ) {
-            LOGGER.severe(e.getMessage());
+            LookAndFeelHelper.changeLookAndFeel(preferences);
+        } catch (UnsupportedLookAndFeelException e) {
+            LOGGER.warning(e.getMessage());
         }
-    }
-
-    private static Optional<String> findFirstOccurrence(List<String> preferences, List<String> options) {
-        return preferences.stream()
-                .filter(preference -> options.stream()
-                        .anyMatch(preference::equals))
-                .findFirst();
     }
 }
