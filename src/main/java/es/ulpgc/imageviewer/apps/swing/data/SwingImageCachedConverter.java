@@ -1,6 +1,5 @@
 package es.ulpgc.imageviewer.apps.swing.data;
 
-import es.ulpgc.imageviewer.apps.swing.data.io.SwingImageDeserializer;
 import es.ulpgc.imageviewer.architecture.data.Cache;
 import es.ulpgc.imageviewer.architecture.model.CachedConverter;
 import es.ulpgc.imageviewer.architecture.model.Converter;
@@ -10,8 +9,13 @@ import java.util.Optional;
 
 public class SwingImageCachedConverter implements CachedConverter<Image, java.awt.Image> {
 
-    private final Cache<Image, java.awt.Image> cache = new SwingImageCache<String>().withKeyMapping(Image::name);
-    private final Converter<Image, java.awt.Image> converter = new SwingImageConverter(new SwingImageDeserializer());
+    private final Cache<Image, java.awt.Image> cache;
+    private final Converter<Image, java.awt.Image> converter;
+
+    public SwingImageCachedConverter(Cache<Image, java.awt.Image> cache, Converter<Image, java.awt.Image> converter) {
+        this.cache = cache;
+        this.converter = converter;
+    }
 
     @Override
     public Optional<java.awt.Image> tryGetConverted(Image image) {

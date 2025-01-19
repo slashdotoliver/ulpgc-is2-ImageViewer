@@ -2,6 +2,7 @@ package es.ulpgc.imageviewer.apps.swing.view.displays;
 
 import es.ulpgc.imageviewer.apps.swing.data.SwingImageCachedConverter;
 import es.ulpgc.imageviewer.apps.swing.view.displays.SwingSimpleImageDisplay.ImageDrawer;
+import es.ulpgc.imageviewer.architecture.model.CachedConverter;
 import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.view.displays.SmoothImageDisplay;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnDraggingListener;
@@ -20,14 +21,15 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
 
     private final SwingSimpleImageDisplay imageDisplay;
     private final AtomicInteger globalOffset = new AtomicInteger(0);
-    private final SwingImageCachedConverter converter = new SwingImageCachedConverter();
+    private final CachedConverter<Image, java.awt.Image> converter;
     private OnDraggingListener draggingListener = OnDraggingListener.None;
     private OnReleaseListener releasedListener = OnReleaseListener.None;
 
-    public SwingSmoothImageDisplay() {
+    public SwingSmoothImageDisplay(SwingImageCachedConverter converter) {
         setLayout(new BorderLayout());
         add(
-                imageDisplay = new SwingSimpleImageDisplay(converter).setImageDrawer(createImageDrawer()),
+                imageDisplay = new SwingSimpleImageDisplay(this.converter = converter)
+                        .setImageDrawer(createImageDrawer()),
                 BorderLayout.CENTER
         );
         addMouseListener(new MouseAdapter() {

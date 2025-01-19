@@ -1,6 +1,9 @@
 package es.ulpgc.imageviewer.apps.swing;
 
+import es.ulpgc.imageviewer.apps.swing.data.SwingImageCache;
 import es.ulpgc.imageviewer.apps.swing.data.SwingImageCachedConverter;
+import es.ulpgc.imageviewer.apps.swing.data.SwingImageConverter;
+import es.ulpgc.imageviewer.apps.swing.data.io.SwingImageDeserializer;
 import es.ulpgc.imageviewer.apps.swing.model.SwingAppArguments;
 import es.ulpgc.imageviewer.apps.swing.utils.LookAndFeelHelper;
 import es.ulpgc.imageviewer.apps.swing.view.dialogs.SwingFolderDialog;
@@ -11,6 +14,7 @@ import es.ulpgc.imageviewer.architecture.commands.CommandRegistry;
 import es.ulpgc.imageviewer.architecture.commands.NextImageCommand;
 import es.ulpgc.imageviewer.architecture.commands.OpenImageFolderCommand;
 import es.ulpgc.imageviewer.architecture.commands.PreviousImageCommand;
+import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.presenter.ImagePresenter;
 import es.ulpgc.imageviewer.architecture.presenter.SimpleImagePresenter;
 import es.ulpgc.imageviewer.architecture.presenter.SmoothImagePresenter;
@@ -45,14 +49,18 @@ public class SwingMain {
     }
 
     private static void configureWith(ImageDisplayStyle style) {
+        final SwingImageCachedConverter converter = new SwingImageCachedConverter(
+                new SwingImageCache<String>().withKeyMapping(Image::name),
+                new SwingImageConverter(new SwingImageDeserializer())
+        );
         switch (style) {
             case Simple -> {
-                SwingSimpleImageDisplay imageDisplay = new SwingSimpleImageDisplay(new SwingImageCachedConverter());
+                SwingSimpleImageDisplay imageDisplay = new SwingSimpleImageDisplay(converter);
                 mainFrame = new SwingMainFrame(imageDisplay, "Simple Image Viewer");
                 presenter = new SimpleImagePresenter(imageDisplay);
             }
             case Smooth -> {
-                SwingSmoothImageDisplay imageDisplay = new SwingSmoothImageDisplay();
+                SwingSmoothImageDisplay imageDisplay = new SwingSmoothImageDisplay(converter);
                 mainFrame = new SwingMainFrame(imageDisplay, "Smooth Image Viewer");
                 presenter = new SmoothImagePresenter(imageDisplay);
             }
