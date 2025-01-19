@@ -19,8 +19,7 @@ public class LookAndFeelHelper {
         } catch (
                 ClassNotFoundException |
                 InstantiationException |
-                IllegalAccessException |
-                UnsupportedLookAndFeelException e
+                IllegalAccessException e
         ) {
             throw new UnsupportedLookAndFeelException(e.getMessage());
         }
