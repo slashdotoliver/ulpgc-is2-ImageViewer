@@ -65,13 +65,13 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     private static void showPreviousImage() {
         CommandRegistry.getInstance()
-                .get(CommandName.PreviousImage)
+                .get(CommandName.ShowPreviousImage)
                 .execute();
     }
 
     private static void showNextImage() {
         CommandRegistry.getInstance()
-                .get(CommandName.NextImage)
+                .get(CommandName.ShowNextImage)
                 .execute();
     }
 

@@ -73,8 +73,8 @@ public class SwingMain {
                         new SwingFolderDialog(),
                         presenter
                 ))
-                .register(NextImage, new NextImageCommand(presenter))
-                .register(PreviousImage, new PreviousImageCommand(presenter));
+                .register(ShowNextImage, new NextImageCommand(presenter))
+                .register(ShowPreviousImage, new PreviousImageCommand(presenter));
     }
 
     private static void tryShowing(File folder, ErrorDisplay errorDisplay) {
