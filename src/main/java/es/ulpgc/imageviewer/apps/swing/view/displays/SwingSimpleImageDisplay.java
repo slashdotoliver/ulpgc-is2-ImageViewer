@@ -56,15 +56,23 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT -> CommandRegistry.getInstance()
-                            .get(CommandName.PreviousImage)
-                            .execute();
-                    case KeyEvent.VK_RIGHT -> CommandRegistry.getInstance()
-                            .get(CommandName.NextImage)
-                            .execute();
+                    case KeyEvent.VK_LEFT -> showPreviousImage();
+                    case KeyEvent.VK_RIGHT -> showNextImage();
                 }
             }
         };
+    }
+
+    private static void showPreviousImage() {
+        CommandRegistry.getInstance()
+                .get(CommandName.PreviousImage)
+                .execute();
+    }
+
+    private static void showNextImage() {
+        CommandRegistry.getInstance()
+                .get(CommandName.NextImage)
+                .execute();
     }
 
     private JLabel createNameLabel() {
@@ -98,9 +106,7 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     private JButton createPreviousButton(JButtonBuilder builder) {
         return builder
-                .setActionListener(_ -> CommandRegistry.getInstance()
-                        .get(CommandName.PreviousImage)
-                        .execute()
+                .setActionListener(_ -> showPreviousImage()
                 )
                 .setText("<")
                 .build();
@@ -108,9 +114,7 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     private JButton createNextButton(JButtonBuilder builder) {
         return builder
-                .setActionListener(_ -> CommandRegistry.getInstance()
-                        .get(CommandName.NextImage)
-                        .execute()
+                .setActionListener(_ -> showNextImage()
                 )
                 .setText(">")
                 .build();
