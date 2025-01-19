@@ -1,10 +1,9 @@
 package es.ulpgc.imageviewer.apps.swing.view.displays;
 
 import es.ulpgc.imageviewer.apps.swing.data.SwingImageCachedConverter;
-import es.ulpgc.imageviewer.architecture.model.CachedConverter;
+import es.ulpgc.imageviewer.apps.swing.view.displays.SwingSimpleImageDisplay.ImageDrawer;
 import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.view.displays.SmoothImageDisplay;
-import es.ulpgc.imageviewer.architecture.view.listeners.OnClickListener;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnDraggingListener;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnReleaseListener;
 
@@ -21,15 +20,16 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
 
     private final SwingSimpleImageDisplay imageDisplay;
     private final AtomicInteger globalOffset = new AtomicInteger(0);
+    private final SwingImageCachedConverter converter = new SwingImageCachedConverter();
     private OnDraggingListener draggingListener = OnDraggingListener.None;
     private OnReleaseListener releasedListener = OnReleaseListener.None;
 
     public SwingSmoothImageDisplay() {
         setLayout(new BorderLayout());
-        var converter = new SwingImageCachedConverter();
-        add(imageDisplay = new SwingSimpleImageDisplay(converter), BorderLayout.CENTER);
-        setImageDrawer(converter);
-
+        add(
+                imageDisplay = new SwingSimpleImageDisplay(converter).setImageDrawer(createImageDrawer()),
+                BorderLayout.CENTER
+        );
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -44,15 +44,15 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
         });
     }
 
-    private void setImageDrawer(CachedConverter<Image, java.awt.Image> converter) {
-        imageDisplay.setImageDrawer((image, g) -> {
-            drawConvertingWith(converter, image.previous(), globalOffset.get() - getWidth(), g);
-            drawConvertingWith(converter, image, globalOffset.get(), g);
-            drawConvertingWith(converter, image.next(), globalOffset.get() + getWidth(), g);
-        });
+    private ImageDrawer createImageDrawer() {
+        return (currentImage, g) -> {
+            draw(currentImage.previous(), globalOffset.get() - getWidth(), g);
+            draw(currentImage, globalOffset.get(), g);
+            draw(currentImage.next(), globalOffset.get() + getWidth(), g);
+        };
     }
 
-    private void drawConvertingWith(CachedConverter<Image, java.awt.Image> converter, Image image, int offset, Graphics g) {
+    private void draw(Image image, int offset, Graphics g) {
         converter.tryGetConverted(image).ifPresent(i -> drawImage(i, g, offset, imageDisplay.getSize()));
     }
 
@@ -60,16 +60,6 @@ public class SwingSmoothImageDisplay extends JPanel implements SmoothImageDispla
     public void show(Image image) {
         globalOffset.set(0);
         imageDisplay.show(image);
-    }
-
-    @Override
-    public void setPreviousImageButtonListener(OnClickListener listener) {
-        imageDisplay.setPreviousImageButtonListener(listener);
-    }
-
-    @Override
-    public void setNextImageButtonListener(OnClickListener listener) {
-        imageDisplay.setNextImageButtonListener(listener);
     }
 
     @Override

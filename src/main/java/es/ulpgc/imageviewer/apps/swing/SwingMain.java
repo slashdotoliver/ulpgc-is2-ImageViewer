@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import static es.ulpgc.imageviewer.architecture.commands.CommandName.OpenFolderCommand;
+import static es.ulpgc.imageviewer.architecture.commands.CommandName.*;
 
 public class SwingMain {
 
     private static final Logger LOGGER = Logger.getLogger(SwingMain.class.getSimpleName());
-    private static final CommandFactory COMMAND_FACTORY = new CommandFactory();
+    private static final CommandRegistry COMMANDS = CommandRegistry.getInstance();
     private static ImagePresenter presenter;
     private static SwingMainFrame mainFrame;
 
@@ -49,15 +49,14 @@ public class SwingMain {
             tryShowing(arguments.folder(), mainFrame.getErrorDisplay());
     }
 
-    private static void registerOpenFolderCommand() {
-        COMMAND_FACTORY.register(OpenFolderCommand, new OpenImageFolderCommand(
-                mainFrame.getErrorDisplay(),
-                new SwingFolderDialog(),
-                presenter
-        ));
-        mainFrame.getOpenFolderMenuItem().addActionListener(
-                _ -> COMMAND_FACTORY.get(OpenFolderCommand).execute()
-        );
+    private static void registerCommands() {
+        COMMANDS.register(OpenImageFolder, new OpenImageFolderCommand(
+                        mainFrame.getErrorDisplay(),
+                        new SwingFolderDialog(),
+                        presenter
+                ))
+                .register(NextImage, new NextImageCommand(presenter))
+                .register(PreviousImage, new PreviousImageCommand(presenter));
     }
 
     private static void tryShowing(File folder, ErrorDisplay errorDisplay) {

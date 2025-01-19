@@ -1,6 +1,5 @@
 package es.ulpgc.imageviewer.architecture.presenter;
 
-import es.ulpgc.imageviewer.architecture.data.io.loaders.ImageLoader;
 import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.view.displays.SimpleImageDisplay;
 
@@ -14,14 +13,18 @@ public class SimpleImagePresenter implements ImagePresenter {
     }
 
     @Override
-    public void showUsing(ImageLoader loader) {
+    public void show(Image image) {
         imageDisplay.reset();
-        show(loader.load());
-        imageDisplay.setPreviousImageButtonListener(() -> show(currentImage.previous()));
-        imageDisplay.setNextImageButtonListener(() -> show(currentImage.next()));
+        imageDisplay.show(currentImage = image);
     }
 
-    private void show(Image image) {
-        imageDisplay.show(currentImage = image);
+    @Override
+    public void showNext() {
+        show(currentImage.next());
+    }
+
+    @Override
+    public void showPrevious() {
+        show(currentImage.previous());
     }
 }

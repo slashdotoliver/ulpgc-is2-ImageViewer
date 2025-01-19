@@ -1,14 +1,15 @@
 package es.ulpgc.imageviewer.apps.swing.view.frames;
 
+import es.ulpgc.imageviewer.architecture.commands.CommandRegistry;
 import es.ulpgc.imageviewer.architecture.view.displays.ErrorDisplay;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class SwingMainFrame extends JFrame {
+import static es.ulpgc.imageviewer.architecture.commands.CommandName.OpenImageFolder;
 
-    private MenuItem openItem;
+public class SwingMainFrame extends JFrame {
 
     public SwingMainFrame(JPanel imageDisplayPanel, String frameTitle) throws HeadlessException {
         setTitle(frameTitle);
@@ -31,11 +32,10 @@ public class SwingMainFrame extends JFrame {
     }
 
     private MenuItem createOpenMenuItem() {
-        openItem = new MenuItem("Open Folder...", new MenuShortcut(KeyEvent.VK_O));
-        return openItem;
-    }
-
-    public MenuItem getOpenFolderMenuItem() {
+        MenuItem openItem = new MenuItem("Open Folder...", new MenuShortcut(KeyEvent.VK_O));
+        openItem.addActionListener(
+                _ -> CommandRegistry.getInstance().get(OpenImageFolder).execute()
+        );
         return openItem;
     }
 

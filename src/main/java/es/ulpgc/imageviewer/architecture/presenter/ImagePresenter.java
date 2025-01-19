@@ -1,7 +1,9 @@
 package es.ulpgc.imageviewer.architecture.presenter;
 
-import es.ulpgc.imageviewer.architecture.data.io.loaders.ImageLoader;
+import es.ulpgc.imageviewer.architecture.model.entities.Image;
 
 public interface ImagePresenter {
-    void showUsing(ImageLoader loader);
+    void show(Image image);
+    void showNext();
+    void showPrevious();
 }

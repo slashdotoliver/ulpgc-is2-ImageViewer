@@ -24,7 +24,7 @@ public record OpenImageFolderCommand(
 
         Optional<ImageFolderLoader> loader = tryCreateLoader(folder.get());
 
-        loader.ifPresent(presenter::showUsing);
+        loader.map(ImageFolderLoader::load).ifPresent(presenter::show);
     }
 
     private Optional<ImageFolderLoader> tryCreateLoader(File folder) {

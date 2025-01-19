@@ -2,11 +2,12 @@ package es.ulpgc.imageviewer.apps.swing.view.displays;
 
 import es.ulpgc.imageviewer.apps.swing.utils.JButtonBuilder;
 import es.ulpgc.imageviewer.apps.swing.utils.JPanelBuilder;
+import es.ulpgc.imageviewer.architecture.commands.CommandName;
+import es.ulpgc.imageviewer.architecture.commands.CommandRegistry;
 import es.ulpgc.imageviewer.architecture.model.CachedConverter;
 import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.model.entities.SynchronizedReference;
 import es.ulpgc.imageviewer.architecture.view.displays.SimpleImageDisplay;
-import es.ulpgc.imageviewer.architecture.view.listeners.OnClickListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,8 +29,6 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     private final CachedConverter<Image, java.awt.Image> converter;
     private final SynchronizedReference<Image> currentImage = new SynchronizedReference<>(Image.None);
     private final JLabel nameLabel = createNameLabel();
-    private OnClickListener previousImageListener = OnClickListener.None;
-    private OnClickListener nextImageListener = OnClickListener.None;
     private ImageDrawer drawer = defaultImageDrawer();
 
     public SwingSimpleImageDisplay(CachedConverter<Image, java.awt.Image> converter) {
@@ -47,8 +46,9 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
                 .ifPresent(i -> drawImage(i, g, 0, getSize()));
     }
 
-    public void setImageDrawer(ImageDrawer drawer) {
+    public SwingSimpleImageDisplay setImageDrawer(ImageDrawer drawer) {
         this.drawer = drawer;
+        return this;
     }
 
     private KeyListener createArrowKeysListener() {
@@ -56,8 +56,12 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT -> previousImageListener.clickPerformed();
-                    case KeyEvent.VK_RIGHT -> nextImageListener.clickPerformed();
+                    case KeyEvent.VK_LEFT -> CommandRegistry.getInstance()
+                            .get(CommandName.PreviousImage)
+                            .execute();
+                    case KeyEvent.VK_RIGHT -> CommandRegistry.getInstance()
+                            .get(CommandName.NextImage)
+                            .execute();
                 }
             }
         };
@@ -94,14 +98,20 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
 
     private JButton createPreviousButton(JButtonBuilder builder) {
         return builder
-                .setActionListener(_ -> previousImageListener.clickPerformed())
+                .setActionListener(_ -> CommandRegistry.getInstance()
+                        .get(CommandName.PreviousImage)
+                        .execute()
+                )
                 .setText("<")
                 .build();
     }
 
     private JButton createNextButton(JButtonBuilder builder) {
         return builder
-                .setActionListener(_ -> nextImageListener.clickPerformed())
+                .setActionListener(_ -> CommandRegistry.getInstance()
+                        .get(CommandName.NextImage)
+                        .execute()
+                )
                 .setText(">")
                 .build();
     }
@@ -114,20 +124,8 @@ public class SwingSimpleImageDisplay extends JPanel implements SimpleImageDispla
     }
 
     @Override
-    public void setPreviousImageButtonListener(OnClickListener listener) {
-        previousImageListener = listener;
-    }
-
-    @Override
-    public void setNextImageButtonListener(OnClickListener listener) {
-        nextImageListener = listener;
-    }
-
-    @Override
     public void reset() {
         converter.clearCache();
-        previousImageListener = OnClickListener.None;
-        nextImageListener = OnClickListener.None;
         show(Image.None);
     }
 

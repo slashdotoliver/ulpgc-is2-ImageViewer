@@ -1,6 +1,5 @@
 package es.ulpgc.imageviewer.architecture.presenter;
 
-import es.ulpgc.imageviewer.architecture.data.io.loaders.ImageLoader;
 import es.ulpgc.imageviewer.architecture.model.entities.Image;
 import es.ulpgc.imageviewer.architecture.view.displays.SmoothImageDisplay;
 import es.ulpgc.imageviewer.architecture.view.listeners.OnDraggingListener;
@@ -22,36 +21,36 @@ public class SmoothImagePresenter implements ImagePresenter {
     }
 
     @Override
-    public void showUsing(ImageLoader loader) {
+    public void show(Image image) {
         imageDisplay.reset();
         setListeners();
-        show(loader.load());
+        display(image);
     }
 
-    private void setListeners() {
-        imageDisplay.setPreviousImageButtonListener(this::showPreviousImage);
-        imageDisplay.setNextImageButtonListener(this::showNextImage);
-        imageDisplay.setReleaseListener(onRelease());
-        imageDisplay.setDraggingListener(onDragging());
+    @Override
+    public void showPrevious() {
+        display(currentImage.previous());
     }
 
-    private void show(Image image) {
+    @Override
+    public void showNext() {
+        display(currentImage.next());
+    }
+
+    private void display(Image image) {
         imageDisplay.show(currentImage = image);
     }
 
-    private void showPreviousImage() {
-        show(currentImage.previous());
-    }
-
-    private void showNextImage() {
-        show(currentImage.next());
+    private void setListeners() {
+        imageDisplay.setReleaseListener(onRelease());
+        imageDisplay.setDraggingListener(onDragging());
     }
 
     private OnReleaseListener onRelease() {
         return (offset, width) -> {
             switch (nextAction(relativeOffsetOf(offset), width)) {
-                case ShowPreviousImage -> showPreviousImage();
-                case ShowNextImage -> showNextImage();
+                case ShowPreviousImage -> showPrevious();
+                case ShowNextImage -> showNext();
                 case KeepCurrentImage -> imageDisplay.setGlobalOffset(0);
             }
             unsetDragging();
